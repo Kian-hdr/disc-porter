@@ -1,0 +1,11 @@
+.build/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.local-state/
+*.sqlite*
+endpoint.json
+*.log
+assets/build/

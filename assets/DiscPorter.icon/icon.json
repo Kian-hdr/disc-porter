@@ -1,0 +1,171 @@
+{
+  "features": [
+    "refractivity",
+    "specular-location"
+  ],
+  "fill-specializations": [
+    {
+      "value": {
+        "linear-gradient": [
+          "srgb:0.055,0.40,0.90,1",
+          "srgb:0.025,0.16,0.46,1"
+        ]
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "srgb:0.035,0.20,0.45,1",
+          "srgb:0.015,0.055,0.14,1"
+        ]
+      }
+    },
+    {
+      "appearance": "tinted",
+      "value": "automatic"
+    }
+  ],
+  "groups": [
+    {
+      "name": "Transfer",
+      "lighting": "individual",
+      "specular": false,
+      "translucency": {
+        "enabled": false,
+        "value": 0
+      },
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.15
+      },
+      "layers": [
+        {
+          "name": "Forward arrow",
+          "image-name": "arrow.svg",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.98,0.99,1,1"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.84,0.94,1,1"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": "automatic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Archive tray",
+      "lighting": "individual",
+      "specular": true,
+      "specular-highlight-placement": "inside",
+      "blur-material": 0.15,
+      "refractivity": {
+        "enabled": true,
+        "strength": 0.25,
+        "depth": 0.3
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.12
+      },
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.25
+      },
+      "layers": [
+        {
+          "name": "Archive tray",
+          "image-name": "tray.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "linear-gradient": [
+                  "srgb:0.32,0.73,1,1",
+                  "srgb:0.07,0.42,0.85,1"
+                ]
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "linear-gradient": [
+                  "srgb:0.26,0.67,1,1",
+                  "srgb:0.06,0.30,0.70,1"
+                ]
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": "automatic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Optical disc",
+      "lighting": "individual",
+      "specular": true,
+      "specular-highlight-placement": "inside",
+      "blur-material": 0.15,
+      "refractivity": {
+        "enabled": true,
+        "strength": 0.3,
+        "depth": 0.3
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.15
+      },
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.3
+      },
+      "layers": [
+        {
+          "name": "Silver disc",
+          "image-name": "disc.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "linear-gradient": [
+                  "srgb:0.96,0.99,1,1",
+                  "srgb:0.53,0.70,0.88,1"
+                ]
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "linear-gradient": [
+                  "srgb:0.90,0.98,1,1",
+                  "srgb:0.38,0.60,0.84,1"
+                ]
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": "automatic"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

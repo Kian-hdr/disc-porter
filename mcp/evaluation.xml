@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic fixture only; deterministic expected answers, not model evaluation results. -->
+<evaluation>
+  <qa_pair><question>Read status, then the fixture job. Which phase has been committed durably?</question><answer>acquire</answer></qa_pair>
+  <qa_pair><question>Find the paused job through status and read it. Which phase will run next?</question><answer>encode</answer></qa_pair>
+  <qa_pair><question>Compare job and overall status disconnect flags. Is overall disconnect safe?</question><answer>true</answer></qa_pair>
+  <qa_pair><question>Read the job and report. What is the physical TV acceptance state despite successful verification?</question><answer>pending</answer></qa_pair>
+  <qa_pair><question>Read status and report for its listed job. Were originals retained?</question><answer>true</answer></qa_pair>
+  <qa_pair><question>Compare status settings with get_settings. What video codec is configured?</question><answer>hevc</answer></qa_pair>
+  <qa_pair><question>Compare status settings with get_settings. Give the ordered configured language codes separated by commas.</question><answer>eng,deu</answer></qa_pair>
+  <qa_pair><question>Read the job collection and profiles. Which exact disc identity has the matching collection?</question><answer>synthetic_disc</answer></qa_pair>
+  <qa_pair><question>Read saved profiles and current settings. Is automatic start enabled?</question><answer>false</answer></qa_pair>
+  <qa_pair><question>Read status and its job. What is the reported MakeMKV executable, expressed as Python None for null?</question><answer>None</answer></qa_pair>
+</evaluation>
