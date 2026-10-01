@@ -70,7 +70,7 @@ struct DisconnectBanner: View {
             Image(systemName: !store.connected ? "bolt.slash" : store.safe ? "checkmark.shield.fill" : "externaldrive.fill")
                 .font(.title3).foregroundStyle(store.safe ? Color.green : Color.orange)
             VStack(alignment: .leading, spacing: 3) {
-                Text(!store.connected ? "Connecting to the local engine" : store.safe ? "No archive writes in progress" : "Keep the archive drive connected")
+                Text(!store.connected ? "Connecting to the local engine" : store.safe ? "Disc Porter has no active writes" : "Keep the archive drive connected")
                     .font(.headline)
                 Text(store.safe ? "Eject the SSD in Finder before unplugging. Completed checkpoints are saved." : "Prepare to disconnect finishes active work at its next checkpoint and disables automatic starts.")
                     .font(.caption).foregroundStyle(.secondary)
