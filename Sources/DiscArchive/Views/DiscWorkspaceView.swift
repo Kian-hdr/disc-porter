@@ -39,7 +39,11 @@ struct DiscWorkspaceView: View {
                     } description: {
                         Text("Connect your DVD or Blu-ray drive, insert a disc and choose Scan. Saved disc profiles can start automatically when enabled in Settings.")
                     } actions: {
-                        Button("Scan for discs") { Task { await store.scan() } }.disabled(store.scanning || !store.connected)
+                        if store.scanning {
+                            ProgressView("Scanning disc information…").controlSize(.small)
+                        } else {
+                            Button("Scan for discs") { Task { await store.scan() } }.disabled(!store.connected)
+                        }
                     }.frame(minHeight: 200)
                 }
                 ForEach(store.discs) { disc in
