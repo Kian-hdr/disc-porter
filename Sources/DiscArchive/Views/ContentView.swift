@@ -11,9 +11,7 @@ struct ContentView: View {
             }.listStyle(.sidebar).navigationSplitViewColumnWidth(min: 165, ideal: 190, max: 240)
         } detail: {
             VStack(spacing: 0) {
-                WorkspaceStatusView(store: store)
                 if let error = store.error { InlineErrorView(message: error) { store.error = nil } }
-                Divider()
                 switch store.destination {
                 case .discs: DiscWorkspaceView(store: store, localSource: $localSource) { store.selectedJobID = $0; store.destination = .queue }
                 case .queue: QueueView(store: store)
@@ -21,7 +19,9 @@ struct ContentView: View {
                 case .profiles: ProfilesView(store: store)
                 case .settings: ArchiveSettingsView(store: store)
                 }
-            }.navigationTitle(store.destination.title)
+                Divider()
+                WorkspaceStatusView(store: store)
+            }.frame(maxWidth: .infinity, maxHeight: .infinity).navigationTitle(store.destination.title)
                 .toolbar {
                     ToolbarItemGroup {
                         Button { Task { await store.scan() } } label: { Label("Scan", systemImage: "arrow.clockwise") }.disabled(store.scanning || !store.connected)
@@ -46,10 +46,9 @@ struct WorkspaceStatusView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: store.safe ? "checkmark.shield" : "externaldrive").foregroundStyle(store.safe ? Color.green : .secondary)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(!store.connected ? "Engine unavailable" : store.status?.disconnectFenced == true ? "Prepared to disconnect" : store.safe ? "Disc Porter has no active writes" : "Keep the archive drive connected").font(.callout.weight(.medium))
-                Text(store.safe ? "Eject in Finder before unplugging." : store.scanning ? "Reading disc information…" : "Processing continues locally when the app closes.").font(.caption).foregroundStyle(.secondary)
-            }
+            Text(!store.connected ? "Engine unavailable" : store.status?.disconnectFenced == true ? "Prepared to disconnect" : store.safe ? "Ready · no active writes" : store.scanning ? "Reading disc information…" : "Archiving · keep the drive connected")
+                .font(.caption).foregroundStyle(.secondary)
+                .help(store.safe ? "Eject in Finder before unplugging." : "Processing continues locally when the app closes.")
             Spacer()
             if let free = store.status?.storage?["free_bytes"].number {
                 Text("\(ByteCountFormatter.string(fromByteCount: Int64(free), countStyle: .file)) free").font(.caption).foregroundStyle(.secondary)
@@ -57,7 +56,7 @@ struct WorkspaceStatusView: View {
             if !store.connected { Button("Reconnect") { Task { await store.reconnect() } }.disabled(store.busy) }
             else if store.status?.disconnectFenced == true { Button("Resume archiving") { Task { await store.queue("resume_archiving") } }.disabled(store.busy) }
             else { Button("Prepare to disconnect") { Task { await store.prepareToDisconnect() } }.disabled(store.busy) }
-        }.padding(.horizontal, 20).padding(.vertical, 10)
+        }.controlSize(.small).padding(.horizontal, 16).padding(.vertical, 8)
     }
 }
 

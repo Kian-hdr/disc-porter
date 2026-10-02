@@ -11,7 +11,7 @@ struct JobDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                HStack { Text(job.collection).font(.title2.weight(.semibold)); Spacer(); Text(job.state.replacingOccurrences(of: "_", with: " ").capitalized).foregroundStyle(.secondary) }
+                HStack { Text(job.collection).font(.title2.weight(.semibold)); Spacer(); JobStatusLabel(job: job) }
                 Text(job.message).font(.callout).foregroundStyle(.secondary).textSelection(.enabled)
                 GroupBox { JobProgressView(job: job).padding(10) }
                 HStack {
@@ -59,8 +59,8 @@ struct JobDetailView: View {
                         LabeledContent("Engine heartbeat", value: job.heartbeatAt ?? "Not reported")
                     }.font(.caption).textSelection(.enabled)
                 }
-            }.padding(20)
-        }
+            }.frame(maxWidth: .infinity, alignment: .leading).padding(20)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
         .confirmationDialog(destructiveAction == "stop_now" ? "Stop this phase now?" : "Cancel this job?", isPresented: Binding(get: { destructiveAction != nil }, set: { if !$0 { destructiveAction = nil } })) {
             Button(destructiveAction == "stop_now" ? "Stop now" : "Cancel job", role: .destructive) { if let action = destructiveAction { Task { await store.action(job, action) } }; destructiveAction = nil }
         } message: { Text(destructiveAction == "stop_now" ? "Owned processing tools stop safely. The unfinished phase restarts to a fresh candidate when resumed; completed files remain." : "Completed files remain. Cancellation takes effect at a checkpoint.") }

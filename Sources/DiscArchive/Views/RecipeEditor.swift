@@ -45,7 +45,7 @@ struct RecipeField: View {
                 HStack {
                     Text("Keep free space (GB)"); Spacer()
                     TextField("Gigabytes", value: Binding(get: { (value.number ?? 0) / 1_000_000_000 }, set: { draft[key] = .number(($0 * 1_000_000_000).rounded()) }), format: .number)
-                        .multilineTextAlignment(.trailing).frame(maxWidth: 140)
+                        .labelsHidden().accessibilityLabel(fieldLabel(key)).multilineTextAlignment(.trailing).frame(maxWidth: 140)
                 }
             } else if !choices.isEmpty {
                 Picker(fieldLabel(key), selection: Binding(get: { value.string }, set: { draft[key] = .string($0) })) {
@@ -57,7 +57,7 @@ struct RecipeField: View {
                 HStack {
                     Text(fieldLabel(key)); Spacer()
                     TextField("Value", value: Binding(get: { value.number ?? 0 }, set: { draft[key] = .number($0) }), format: .number)
-                        .multilineTextAlignment(.trailing).frame(maxWidth: 140)
+                        .labelsHidden().accessibilityLabel(fieldLabel(key)).multilineTextAlignment(.trailing).frame(maxWidth: 140)
                 }
                 if let minimum = definition["minimum"].number, let maximum = definition["maximum"].number {
                     Text("Supported range: \(Int(minimum))–\(Int(maximum))").font(.caption).foregroundStyle(.secondary)
@@ -83,7 +83,7 @@ func fieldLabel(_ key: String) -> String {
     return labels[key] ?? key.replacingOccurrences(of: "_", with: " ").capitalized
 }
 func choiceLabel(_ value: String) -> String {
-    ["keep": "Keep originals", "delete_verified": "Permanently delete verified temporary originals", "source": "Preserve source", "system": "Follow macOS", "original": "Original archive", "transcode": "Transcode", "copy": "Preserve tracks", "main_per_language": "Main track per language" ][value] ?? value.replacingOccurrences(of: "_", with: " ").capitalized
+    ["mp4": "MP4", "mkv": "MKV", "hevc": "HEVC", "h264": "H.264", "aac": "AAC", "ac3": "AC-3", "eac3": "E-AC-3", "cpu_threads": "CPU threads", "keep": "Keep originals", "delete_verified": "Permanently delete verified temporary originals", "source": "Preserve source", "system": "Follow macOS", "original": "Original archive", "transcode": "Transcode", "copy": "Preserve tracks", "main_per_language": "Main track per language" ][value] ?? value.replacingOccurrences(of: "_", with: " ").capitalized
 }
 func fieldHint(_ key: String) -> String? {
     switch key {

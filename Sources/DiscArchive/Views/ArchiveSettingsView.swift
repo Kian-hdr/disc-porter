@@ -54,6 +54,7 @@ struct ArchiveSettingsView: View {
                 }
             }.frame(minWidth: 450, maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .searchable(text: $search, prompt: "Search settings")
         .onAppear { if !loaded { load() } }
         .onChange(of: store.status?.settings) { _, _ in if !loaded { load() } }

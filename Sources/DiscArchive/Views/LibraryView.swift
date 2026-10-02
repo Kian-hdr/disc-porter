@@ -16,7 +16,7 @@ struct LibraryView: View {
             if let item = items.first(where: { $0["id"].string == selected }) {
                 LibraryDetailView(store: store, item: item).id(item["id"].string).frame(minWidth: 320, idealWidth: 380, maxWidth: 480)
             }
-        }.searchable(text: $search, prompt: "Search archive")
+        }.frame(maxWidth: .infinity, maxHeight: .infinity).searchable(text: $search, prompt: "Search archive")
             .overlay { if items.isEmpty { ContentUnavailableView("Archive library", systemImage: "film.stack", description: Text("Completed and explicitly imported media appear here.")) } }
     }
 }
