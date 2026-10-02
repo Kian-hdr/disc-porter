@@ -1,0 +1,10 @@
+{
+  "publisher": "Python Software Foundation",
+  "version": "3.13.15",
+  "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-macos11.pkg",
+  "sha256": "3b7eaf7f29825f796e8267024435540ddf1f17fc9a97ad58095daa7a75bfdcd3",
+  "signature": "Python Software Foundation Developer ID Installer verified by pkgutil; Apple notarization reported trusted",
+  "action": "Private extraction only; framework load paths relocated; ad-hoc re-signed",
+  "minimum_macos_publisher_filename": "11",
+  "corresponding_source_review": "pending; CPython source archive captured separately; inspect installer dependency builds before public redistribution"
+}

@@ -1,0 +1,49 @@
+{
+  "architecture": "x86_64",
+  "execution_environment": "Rosetta on Apple Silicon; not physical Intel validation",
+  "checks": [
+    {
+      "check": "frozen_sdk_initialize_list_status",
+      "passed": true,
+      "tool_count": 43
+    },
+    {
+      "check": "frozen_supervisor_dispatch",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx264",
+      "pixel_format": "yuv420p",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx265",
+      "pixel_format": "yuv420p",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx265",
+      "pixel_format": "yuv420p10le",
+      "passed": true
+    },
+    {
+      "check": "synthetic_subtitle_burn_coretext",
+      "passed": true
+    },
+    {
+      "check": "synthetic_hardware_encode",
+      "encoder": "h264_videotoolbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "synthetic_hardware_encode",
+      "encoder": "hevc_videotoolbox",
+      "passed": false,
+      "detail": "bit_rate, rate, width or height.\n[vf#0:0 @ 0x7fd53f808200] Error sending frames to consumers: Generic error in an external library\n[vf#0:0 @ 0x7fd53f808200] Task finished with error code: -542398533 (Generic error in an external library)\n[vf#0:0 @ 0x7fd53f808200] Terminating thread with return code -542398533 (Generic error in an external library)\n[vost#0:0/hevc_videotoolbox @ 0x7fd53dc04840] [enc:hevc_videotoolbox @ 0x7fd53dd04540] Could not open encoder before EOF\n[vost#0:0/hevc_videotoolbox @ 0x7fd53dc04840] Task finished with error code: -22 (Invalid argument)\n[vost#0:0/hevc_videotoolbox @ 0x7fd53dc04840] Terminating thread with return code -22 (Invalid argument)\n[out#0/mp4 @ 0x7fd53db04d00] Nothing was written into output file, because at least one of its streams received no packets.\n"
+    }
+  ]
+}

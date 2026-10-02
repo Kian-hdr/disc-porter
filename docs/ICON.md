@@ -57,3 +57,5 @@ Verified with Xcode 27.0 build 27A266a and Icon Composer 27.0 build 129:
 - `assetutil --info` parsed the resulting asset catalog as a macOS catalog compiled by Xcode 27.
 
 These checks validate the source and compiled resources. Actual Finder/Dock appearance selection requires the integrated installed app bundle and is owned by the final app validation step. Appearance selection on older macOS versions is limited by that OS's available icon presentation features.
+
+Disc Porter 0.2 preserves this same editable icon and all six appearances. The 0.2 self-contained packaging step copies the native catalog and compiler-generated `.icns`, with no runtime code overriding the bundle icon. Re-rendering and schema validation passed on Xcode 27; final Finder/Dock selection remains part of integrated app QA.

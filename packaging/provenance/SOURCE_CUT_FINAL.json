@@ -1,0 +1,74 @@
+{
+  "source_sha256": "81040e3da5f13b34ff7027154c7514755e9a940174364259f137c4b5b95dd762",
+  "files": [
+    {
+      "path": "disc_porter_control/__init__.py",
+      "sha256": "9835e3a00d289d3ac50ab895983617247c33e6db64e58acc7235aa93f6207c83"
+    },
+    {
+      "path": "disc_porter_control/server.py",
+      "sha256": "1059dfdfe29b743593b687da55b2a8c11a7ae200f41bbd42be536f5f3cd02c2b"
+    },
+    {
+      "path": "engine/__init__.py",
+      "sha256": "518ab54153928a5c21058c910ccd7a1dcd6c2cabbde769331cd107b6c213a52a"
+    },
+    {
+      "path": "engine/core.py",
+      "sha256": "02598c36faa0d76a5dbed75fbc10c38c4fc57426db90a15928a0ae5102ffebde"
+    },
+    {
+      "path": "engine/helper.py",
+      "sha256": "38aed2fb7110e9d3418f47f54f427cffed20bd97d06f2b180e3947a27db317bd"
+    },
+    {
+      "path": "engine/media.py",
+      "sha256": "7ee45dc90e99a1b48102bcd1c561f215012b4fec83c855c5bb6fb90fca701eef"
+    },
+    {
+      "path": "engine/mp4.py",
+      "sha256": "3c7d85e9df0c229cef11688cd0882d89d32c532d9041b057fc595ea6be15f958"
+    },
+    {
+      "path": "engine/runner.py",
+      "sha256": "c04fec7045d77db84439313462f6dfcedd0c31f8fe6f9b5fb082da6f1b5b0454"
+    },
+    {
+      "path": "engine/schema.py",
+      "sha256": "89567fa2c7ffef756d6b9232b4ddfa91019a1fc8f9d9aabd21195f212cde05a9"
+    },
+    {
+      "path": "engine/server.py",
+      "sha256": "7d932cce96dcc5526a2e7652560448bae6008b47391311e1a4f0a3c0db276055"
+    },
+    {
+      "path": "engine/service.py",
+      "sha256": "c009c8a9325de420c4b73bcc933d5035247474ee16ae58b6470bf0bf6240b1a2"
+    },
+    {
+      "path": "engine/transfers.py",
+      "sha256": "e87e492a917bca6ce2ba6f7a0a0e578c11b4d5e51f3e3c9656887d25624d43cc"
+    },
+    {
+      "path": "mcp/requirements.txt",
+      "sha256": "7aface5bceeef3e4f015257c803443dd166197be64d611e7a6118d06939bda60"
+    },
+    {
+      "path": "mcp/server.py",
+      "sha256": "4783157e93cf6557499cec2b95cf414ad9eff40fbc9ab1d3d00647b53074720b"
+    },
+    {
+      "path": "packaging/disc_porter_helper.spec",
+      "sha256": "8c33bc584ce0dd99a33793adf5ae2c54d40679a34294e66892a49d523e116433"
+    },
+    {
+      "path": "packaging/requirements-build.txt",
+      "sha256": "f9be46bd395c3d0678bee27500874842f7c1396abfa04240f9f6668dbf27c4af"
+    }
+  ],
+  "validation_source": {
+    "path": "tests/mcp/test_bridge.py",
+    "sha256": "226360ff3a8d9cd5dbbd31e868c7ca705bf5685b07c7d245fd61106296c2d3ac"
+  },
+  "scope": "Frozen engine/bridge source cut; excludes GUI and build-cache data; uncommitted source is allowed for this private artifact"
+}

@@ -1,45 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 MODE="${1:-run}"
-APP_NAME="DiscPorter"
-BUILD_DIR="${DISC_PORTER_BUILD_DIR:-$HOME/Library/Caches/DiscPorter/SwiftPM}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
-APP_BUNDLE="$ROOT_DIR/dist/Disc Porter.app"
-CONTENTS="$APP_BUNDLE/Contents"
-# The persistent processing engine deliberately survives GUI relaunches.
-# Never kill FFmpeg, MakeMKV or the engine from this development script.
-pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+BUILD_DIR="${DISC_PORTER_BUILD_DIR:-$HOME/Library/Caches/DiscPorter/SwiftPM}"
+STAGING_ROOT="$HOME/Library/Caches/DiscPorter/AppBuilds"
+export PYTHONPYCACHEPREFIX="${PYTHONPYCACHEPREFIX:-$HOME/Library/Caches/DiscPorter/PythonBytecode}"
+mkdir -p "$STAGING_ROOT"
 swift build --scratch-path "$BUILD_DIR"
+HELPER="packaging/dist/DiscPorterHelper/disc-porter-helper"
+if [[ ! -x "$HELPER" ]] || [[ -n "$(find engine disc_porter_control -name '*.py' -newer "$HELPER" -print -quit)" ]]; then
+  ./script/build_helper.sh >"$STAGING_ROOT/helper-build.log" 2>&1
+fi
+if [[ ! -x packaging/dist/Tools/ffmpeg ]]; then
+  ./packaging/build_codecs.sh >"$STAGING_ROOT/codec-build.log" 2>&1
+fi
 if [[ ! -f assets/build/catalog/Assets.car ]] || [[ -n "$(find assets/DiscPorter.icon -type f -newer assets/build/catalog/Assets.car -print -quit)" ]]; then
   ./script/build_icon.sh
 fi
-mkdir -p "$CONTENTS/MacOS" "$CONTENTS/Resources"
-cp "$(swift build --scratch-path "$BUILD_DIR" --show-bin-path)/DiscArchive" "$CONTENTS/MacOS/$APP_NAME"
-chmod +x "$CONTENTS/MacOS/$APP_NAME"
-cp assets/build/catalog/Assets.car "$CONTENTS/Resources/Assets.car"
-cp assets/build/catalog/DiscPorter.icns "$CONTENTS/Resources/DiscPorter.icns"
-if [[ -d engine ]]; then
-  mkdir -p "$CONTENTS/Resources/engine"
-  /usr/bin/rsync -a --exclude '__pycache__' --exclude '*.pyc' engine/ "$CONTENTS/Resources/engine/"
-fi
-python3 - "$CONTENTS/Info.plist" "$ROOT_DIR" <<'PY'
-import plistlib, sys
-with open(sys.argv[1], 'wb') as f:
-    plistlib.dump({
-        'CFBundleExecutable':'DiscPorter', 'CFBundleIdentifier':'dev.discporter.app',
-        'CFBundleName':'Disc Porter', 'CFBundleDisplayName':'Disc Porter',
-        'CFBundlePackageType':'APPL', 'CFBundleShortVersionString':'0.1.0',
-        'CFBundleVersion':'1', 'LSMinimumSystemVersion':'14.0',
-        'NSPrincipalClass':'NSApplication', 'NSHighResolutionCapable':True,
-        'DiscPorterSourceRoot':sys.argv[2],
-        'CFBundleIconName':'DiscPorter', 'CFBundleIconFile':'DiscPorter',
-    }, f)
-PY
-# Strip build-only Finder metadata that cloud-synced source directories can add.
-# Source artwork and user files are never modified by this step.
-/usr/bin/xattr -cr "$APP_BUNDLE"
-/usr/bin/codesign --force --sign - "$APP_BUNDLE"
+STAGE="$(mktemp -d "$STAGING_ROOT/build-XXXXXXXX")"
+APP_BUNDLE="$STAGE/Disc Porter.app"
+./script/package_app.sh "$APP_BUNDLE" "$(swift build --scratch-path "$BUILD_DIR" --show-bin-path)/DiscArchive"
+printf '%s\n' "$APP_BUNDLE" > "$STAGING_ROOT/latest-app.txt"
+if [[ "$MODE" = --build-only ]]; then exit 0; fi
+python3 ./script/runtime_gate.py
+# Only the GUI closes after its processing engine has safely exited.
+pkill -x DiscPorter >/dev/null 2>&1 || true
 open_app() {
   if [[ -n "${DISC_PORTER_STATE_DIR:-}" ]]; then
     /usr/bin/open -n --env "DISC_PORTER_STATE_DIR=$DISC_PORTER_STATE_DIR" "$APP_BUNDLE"
@@ -49,10 +35,9 @@ open_app() {
 }
 case "$MODE" in
   run) open_app ;;
-  --build-only) ;;
-  --debug|debug) lldb -- "$CONTENTS/MacOS/$APP_NAME" ;;
+  --debug|debug) lldb -- "$APP_BUNDLE/Contents/MacOS/DiscPorter" ;;
   --logs|logs) open_app; /usr/bin/log stream --info --style compact --predicate 'process == "DiscPorter"' ;;
   --telemetry|telemetry) open_app; /usr/bin/log stream --info --style compact --predicate 'subsystem == "dev.discporter.app"' ;;
-  --verify|verify) open_app; sleep 1; pgrep -x "$APP_NAME" >/dev/null ;;
+  --verify|verify) open_app; sleep 1; pgrep -x DiscPorter >/dev/null ;;
   *) echo "Usage: $0 [run|--build-only|--verify|--debug|--logs|--telemetry]" >&2; exit 2 ;;
 esac

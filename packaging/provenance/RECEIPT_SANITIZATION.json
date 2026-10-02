@@ -1,0 +1,83 @@
+{
+  "scope": "Homebrew INSTALL_RECEIPT.json only; no license text modification",
+  "receipts": [
+    {
+      "path": "ffmpeg/dav1d-1.5.4/INSTALL_RECEIPT.json",
+      "original_sha256": "cf983afb477209838a8e5a1ca42a54e555b59c2b9cbfd2962af682039bc5da12",
+      "sanitized_sha256": "f8b5cf26c4fd31951f9e2652c27717633fe679fca4eaaab4c769f4d9c6375308",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/ffmpeg-9.0.1/INSTALL_RECEIPT.json",
+      "original_sha256": "91596a051c76e6149ae3c78fe23b5e52ff1e45354b32cdd7ad411cd0614b10cc",
+      "sanitized_sha256": "a850e2fab6b3ce3b03991bf419bec487fc314335078509b553f7ee1921c8b3df",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/lame-4.0/INSTALL_RECEIPT.json",
+      "original_sha256": "4a27f23486ab4ac40b15aecffe330db0061ccad4b93f98ae4d1f537835be9fb1",
+      "sanitized_sha256": "81df7619c13e04c0bb575386da7137f135c52123a5b0258f139e0660191a3b4c",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/libvmaf-3.2.0/INSTALL_RECEIPT.json",
+      "original_sha256": "2d2a8dac5211136b68675df05c1d0b85f19c16317ef1dc801e99225e79f2abc7",
+      "sanitized_sha256": "889432998b4f800b01d6dcd0f6f9adbfd1346e2068bbdff2e2ce0fcb46c2e0ff",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/libvpx-1.16.0/INSTALL_RECEIPT.json",
+      "original_sha256": "dead34faed8cba863c86ec61e376e948f221291b2bd5d7dafd8bc4c044f77683",
+      "sanitized_sha256": "de258e09fcad00572bb2cd51fc836142e8d604a78c1be3aedfa7c1d665011faa",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/mpg123-1.33.7/INSTALL_RECEIPT.json",
+      "original_sha256": "127ebc0311fc8d4374d3c354e2e46eadc020d376da89da4edfcc9b5e073dd2d6",
+      "sanitized_sha256": "23903202a981d2664e4d3e414e4ca91d5a18917f3fc1fdc7898cc6abc4f26d8e",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/openssl@3-3.6.4/INSTALL_RECEIPT.json",
+      "original_sha256": "1af27dc7d0824d40cb83a26cda9d80b2afa49e156d34f3ba665af9eea82e2fd0",
+      "sanitized_sha256": "6337a7207b78e26485a7784212b3b59ffff59eeee2b014b5ab598b5ae1d1180c",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/opus-1.6.1/INSTALL_RECEIPT.json",
+      "original_sha256": "1f786b0cc2690cdeb8b0c73cafa5ea1b35bd7cbc04d3519fcc5a3613ece66f47",
+      "sanitized_sha256": "a9059242e0244dd793b57171062e73edfdb9b28d5ca41e65203a5efc455c12a9",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/svt-av1-4.2.0/INSTALL_RECEIPT.json",
+      "original_sha256": "b92f61dfdc1e0d425ca524ee995a0f65b5a27737d3ffa014d52b866ad9084f50",
+      "sanitized_sha256": "e466431ebda80ef6aeea63b68ee4f84444faf9654b22abf3510eeb9b48b2bdbe",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/x264-r3222/INSTALL_RECEIPT.json",
+      "original_sha256": "e8ffa3b5235d992c2bffe6db0afed5e33c51ea69af33d1089209a17fda399ab4",
+      "sanitized_sha256": "68209a71746885f78075192a15beb276d4cd7a05f4b55fbf3f78b6e46619535e",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/x265-4.2/INSTALL_RECEIPT.json",
+      "original_sha256": "707d575c029a78a7a97a1d63db3fdf6f991da26ac466f37df1ea43c4562adda9",
+      "sanitized_sha256": "68ef3f96a269e665ebf3962ef2da96e63716761997bb9743156d9331f90b38a5",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "ffmpeg/xz-5.8.3/INSTALL_RECEIPT.json",
+      "original_sha256": "798545e864d9f7eff3fd662f1bebb6e73f0be62b50e980c1ce5f7fef26ccb841",
+      "sanitized_sha256": "bf6c700bd0484c4d293404afe3cb1af857f18b70005910cd0d726916db5c581f",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    },
+    {
+      "path": "python-native/python@3.13-3.13.15/INSTALL_RECEIPT.json",
+      "original_sha256": "8d72439a1812bf6daff66b7a23f939dc87a26b9ea9ccf834fdf2c66ab4f28577",
+      "sanitized_sha256": "e545f152bb904f351121c10e3e37817b38aaed7ca7f064487f4a005765ad5e37",
+      "transformation": "Personal /Users home prefixes replaced with <LOCAL_HOME>; original preserved in ignored private build cache; checksum/version/license content unchanged"
+    }
+  ]
+}

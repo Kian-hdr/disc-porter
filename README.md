@@ -1,63 +1,55 @@
 # Disc Porter
 
-A native macOS app for local DVD and Blu-ray archiving, durable checkpoints and optional MCP control. The processing engine runs without AI models or token consumption. An AI client using MCP still uses its own model tokens.
+A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
 
-**Private development build.** Real optical acquisition, target-player acceptance and release packaging require validation before public publication. This repository is the canonical technical documentation; private runtime records stay outside it.
+**Version 0.2 is a private development build.** Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Public release remains gated on physical validation and distribution review.
 
-## Workflow
+## One window, five destinations
 
-1. Choose an existing archive folder on your SSD in Settings.
-2. Insert a disc. Scan its structure and title list.
-3. For an unfamiliar disc, confirm the collection, selected title IDs and file names. Disc labels and durations alone cannot reliably identify official episodes or cuts.
-4. Save its fingerprint profile. Enable automatic starts in Settings for subsequent known discs.
-5. Start the archive, or choose the checkpoint to reach before stopping.
-6. Use **Prepare to disconnect**. Wait until no archive writes are in progress, then eject the SSD in Finder before unplugging it.
+- **Discs:** discover media, confirm identification, select titles/streams, preview the effective recipe and destination.
+- **Queue:** measured progress, title checkpoints, pause/next/resume/stop-now, retry and ordering.
+- **Library:** verified outputs, retained/removed originals, review records, previews, exports and cleanup eligibility.
+- **Profiles:** immutable builtins, editable duplicates and exact-disc mappings.
+- **Settings:** searchable storage/video/audio/subtitle/automation/AI/tool controls. Toolbar, app menu and Command-comma open the same window.
 
-Originals remain available in `Original_MKV/`. Each successful job produces verified MP4s. Alternate mixes and bitmap subtitles remain in the originals. English and German primary audio are selected when present; source channel count is checked. Unsupported HDR, interlaced/anamorphic video and ambiguous audio pause for review rather than silently converting features.
+Unknown discs receive suggestions and require confirmed mapping. Labels, durations and playlists alone do not prove official episode or cut identity. Optional TMDb lookup is off by default and keeps credentials in Keychain.
 
-## Checkpoints
+## Presets and checkpoints
 
-| Checkpoint | Durable result |
-| --- | --- |
-| Disc identified | Exact selection, source identity and destination recorded |
-| Originals saved | Complete title MKVs extracted or local video remuxed and decoded |
-| MP4s encoded | New MP4 candidates created without replacing existing files |
-| Files checked | Source/output metadata, audio mapping, duration and full decode checked |
-| All automatic steps | Verified candidates promoted without overwriting; originals retained |
+Balanced uses HEVC CRF20/medium; Compatibility uses H.264 and requires explicit approval before reducing source bit depth; Original archive preserves original MKVs; Legacy retains existing English/German CRF18 settings. New-user recipes support all source languages, exact track/default/forced choices and SDR deinterlacing/aspect transforms. HDR/Dolby Vision transcode and automatic OCR are outside this version; original mode preserves those sources.
 
-**Stop after the next checkpoint** finishes the current phase. **Work to next checkpoint** advances one phase. An interrupted extraction or encoding restarts the unfinished phase in a new candidate; completed phases remain saved. This is phase-level recovery, not arbitrary-frame continuation.
+Each completed title operation is committed. Pause stops at a title boundary; Stop now stops only owned work and restarts its unfinished operation into a fresh candidate. Checkpoint edits preview their impact and retain older generations. Accepted preview fingerprints and revision checks prevent concurrent AI/UI changes from silently replacing the approved recipe.
 
-Global disconnect status includes engine jobs and active scanning. Other applications may still be using a drive: use normal macOS eject. Physical playback, correct cut/episode content, perceptual quality and subtitle selectability are separate acceptance checks visible as pending in reports.
+**Prepare to disconnect** fences new work and waits for owned writers/readers/scans/transfers to exit. Other applications may still use the drive: eject it normally in Finder. Source/volume guards reject missing or replaced destinations. APFS hardlinks are an optimization; verified-copy fallback and per-file exports support other filesystems.
 
-## Development setup
+Originals default to **Keep**. Optional **permanent** cleanup deletes only journaled app-created temporary originals after verified final publication and required original-stream sidecars. Imported sources, final original-archive deliverables and originals referenced by other jobs remain protected. Technical validation does not prove perceptual quality or target-player playback; reports keep those states separate.
 
-Requires macOS 14+, Xcode 27/Swift 6 for development and native icon compilation, Python 3.10+, FFmpeg/FFprobe and a separately installed MakeMKV for optical extraction. Development is currently tested on Apple Silicon. Third-party tools are not redistributed or relicensed by this project. Archive destinations currently require hardlink support, such as APFS; ExFAT export is a separate future feature.
+## Self-contained runtime
+
+The app bundles CPython, its MCP bridge, FFmpeg/FFprobe and required libraries. Runtime needs no Homebrew, developer Python or repository checkout. MakeMKV and a capable optical drive remain external dependencies; use its [official download](https://www.makemkv.com/download/) and its own license.
+
+The target is macOS14+. Apple Silicon and Intel artifacts are separate; Intel/Rosetta and Mach-O deployment checks are not physical Intel/macOS14 acceptance. Native dependency notices, sources and build provenance are retained. Developer ID/notarized distribution remains separate from private ad hoc builds.
+
+## Development
+
+Build requires Xcode27/Swift6 plus the documented pinned native build tools. Runtimes/build caches stay outside provider-backed output where possible. A first build fetches approved source dependencies and can take longer than subsequent cached builds.
 
 ```bash
-brew install python@3.12 ffmpeg
 ./mcp/setup.sh
-./script/build_and_run.sh --verify
-```
-
-Get MakeMKV from its [official download page](https://www.makemkv.com/download/). Its own license and capable optical hardware remain required. Encoding uses FFmpeg software encoders; a local engine supervises external tools and owns job state independently of the GUI.
-
-The generated app is `dist/Disc Porter.app`. The Codex Run action uses the same build/run script. `--build-only`, `--logs`, `--debug` and `--telemetry` are available. These bundles are development builds, without distribution signing or notarization.
-
-## MCP
-
-[MCP setup, tools and client configuration](mcp/README.md). The bridge exposes compact job operations over stdio to the same authenticated local engine. Connect a client once; no cloud service or model is required by the pipeline. MCP cannot automatically register itself in every AI service.
-
-## Tests and evidence
-
-```bash
+./script/build_and_run.sh --build-only
 ./script/test.sh
-./script/build_and_run.sh --verify
 ```
 
-Synthetic fixtures exercise recovery and encoding. They do not establish physical disc compatibility. [Validation record](docs/VALIDATION.md), [architecture](docs/ARCHITECTURE.md), [API contract](docs/API.md).
+The build/run script assembles a fresh app under the local Library/Caches folder and refuses unsafe engine replacement. The Codex Run action uses that same script. `--verify`, `--debug`, `--logs` and `--telemetry` are available.
 
-The editable [Icon Composer source and six appearance previews](docs/ICON.md) are included. SwiftPM build/test caches stay in the user's Library/Caches folder, avoiding cloud-file metadata in signed test bundles.
+[Packaging instructions](docs/PACKAGING.md) · [v2 API](docs/API_V2.md) · [0.2 validation](docs/VALIDATION_0_2.md) · [Icon Composer source/appearances](docs/ICON.md)
 
-## Attribution
+## MCP and notifications
 
-The workflow is informed by Kian's [DVD Digitize & Archive](https://github.com/Kian-hdr/dvd-digitize-archive) skill. This application implements a persistent engine and native UI; it does not bundle private media or collection records. MCP uses the [official Python SDK](https://github.com/modelcontextprotocol/python-sdk).
+The bundled helper exposes **43 typed tools**, including settings/presets, job preview/edit, queue fencing, track choices, acceptance, library, export and scoped cleanup. It can start/reconnect the local engine without the GUI. See [MCP client setup](mcp/README.md). V2 controls reject incompatible older engines rather than silently ignoring their parameters.
+
+Native notifications request OS authorization only from an explicit in-app button. Closing the window keeps the app observer alive; explicit Quit leaves only engine history for the next launch.
+
+## Attribution and publication
+
+Workflow informed by [DVD Digitize & Archive](https://github.com/Kian-hdr/dvd-digitize-archive). The original app source license remains MIT; bundled third-party components retain their own licenses and source duties. MCP uses the [official Python SDK](https://github.com/modelcontextprotocol/python-sdk). No private media or collection records are included. Keep this repository private until the separately authorized release review.

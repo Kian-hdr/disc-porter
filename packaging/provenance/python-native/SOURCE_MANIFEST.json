@@ -1,0 +1,39 @@
+{
+  "capture_scope": "Exact installed FFmpeg dylib closure. Formula recipes/receipts are evidence, not proof of complete corresponding source.",
+  "archives_shipped_in_app": false,
+  "public_redistribution_status": "blocked_pending_source_and_license_review",
+  "components": [
+    {
+      "name": "python@3.13",
+      "version": "3.13.15",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "python@3.13-3.13.15/formula.rb",
+      "notice_files": [
+        "LICENSE",
+        "SOURCE__Python-3.13.15__Doc__copyright.rst",
+        "SOURCE__Python-3.13.15__Doc__license.rst",
+        "SOURCE__Python-3.13.15__Doc__using__mac_installer_03_license.png",
+        "SOURCE__Python-3.13.15__LICENSE",
+        "SOURCE__Python-3.13.15__Mac__BuildScript__resources__License.rtf",
+        "SOURCE__Python-3.13.15__Modules__expat__COPYING",
+        "SOURCE__Python-3.13.15__PC__crtlicense.txt",
+        "SOURCE__Python-3.13.15__Python__getcopyright.c",
+        "SOURCE__Python-3.13.15__Tools__msi__bundle__bootstrap__LICENSE.txt"
+      ],
+      "recipe_sha256": "76e68dce57465311e445fd76442ae79c6b14b1064f32c966553dce81f6349b86",
+      "formula_declared_license": "\"Python-2.0\"",
+      "source_url": "https://www.python.org/ftp/python/3.13.15/Python-3.13.15.tgz",
+      "expected_sha256": "c28d9d213c09b5b5ab2c29812950e12f746999e099b82894231be954b26baed9",
+      "recipe_additional_source_urls": [
+        "https://www.python.org/downloads/source/",
+        "https://files.pythonhosted.org/packages/46/ef/34533186e76c526d9ec17a1ad9a10c7354cbfb20f51583cc36dfe4bdccd0/flit_core-4.0.2.tar.gz",
+        "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz",
+        "https://files.pythonhosted.org/packages/db/96/e6f8e9d9d7b9cc4457092712a7e919c3186aa2c2fa9ffed2c5d29cc947e8/pip-26.2.tar.gz",
+        "https://files.pythonhosted.org/packages/39/62/75f18a0f03b4219c456652c7780e4d749b929eb605c098ce3a5b6b6bc081/wheel-0.47.0.tar.gz"
+      ],
+      "archive": "python_3.13-3.13.15.13.15.tgz",
+      "archive_sha256": "c28d9d213c09b5b5ab2c29812950e12f746999e099b82894231be954b26baed9"
+    }
+  ]
+}

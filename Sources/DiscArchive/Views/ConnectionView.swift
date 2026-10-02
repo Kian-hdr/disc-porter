@@ -2,46 +2,38 @@ import SwiftUI
 import AppKit
 
 struct ConnectionView: View {
+    let store: ArchiveStore
+    @State private var token = ""
+    @State private var configured = false
+    @State private var online = false
     @State private var copied = false
-    private var root: String {
-        Bundle.main.object(forInfoDictionaryKey: "DiscPorterSourceRoot") as? String ?? "<repository-folder>"
-    }
-    private var launcher: String { root + "/mcp/run.sh" }
+    private var helper: String { Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/DiscPorterHelper/disc-porter-helper").path }
     private var config: String {
-        "[mcp_servers.disc_porter]\ncommand = \"\(launcher.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\""
+        "[mcp_servers.disc_porter]\ncommand = \"\(helper.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\"\nargs = [\"mcp\"]"
     }
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Image(systemName: "point.3.connected.trianglepath.dotted").font(.system(size: 42)).foregroundStyle(.tint)
-                    .accessibilityHidden(true)
-                Text("A small connection. A complete workflow.").font(.largeTitle.bold())
-                Text("An AI assistant can start an archive, inspect a report or request a checkpoint. Disc Porter handles the long-running work locally, even after the chat closes.")
-                    .foregroundStyle(.secondary)
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Label("Local MCP connection", systemImage: "lock.shield").font(.headline)
-                        Text("Run the repository's MCP setup once, then add this server to your client. Reopen the client to discover the tools. Keep Disc Porter open for the first connection.")
-                        Text(config).font(.system(.body, design: .monospaced)).textSelection(.enabled)
-                            .padding(12).frame(maxWidth: .infinity, alignment: .leading).background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
-                        HStack {
-                            Button(copied ? "Copied" : "Copy Codex configuration") {
-                                NSPasteboard.general.clearContents()
-                                NSPasteboard.general.setString(config, forType: .string)
-                                copied = true
-                            }
-                            Button("Open MCP instructions") {
-                                NSWorkspace.shared.open(URL(fileURLWithPath: root + "/mcp/README.md"))
-                            }
-                        }
-                    }.padding(14)
+        Form {
+            Section("Local AI connection") {
+                Text("The bundled MCP helper exposes the same archive operations as the app. Media processing runs locally without model calls.")
+                Text(config).font(.system(.caption, design: .monospaced)).textSelection(.enabled)
+                Button(copied ? "Copied" : "Copy Codex configuration") { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(config, forType: .string); copied = true }
+                Text("Configure your AI client once. Its model usage is separate from Disc Porter processing.").font(.caption).foregroundStyle(.secondary)
+            }
+            Section("Optional metadata suggestions") {
+                Toggle("Enable online TMDb lookup", isOn: $online)
+                    .onChange(of: online) { _, enabled in
+                        guard enabled != store.status?.settings["online_lookup"].bool else { return }
+                        Task { var draft = store.status?.settings ?? ArchiveSettings(); draft["online_lookup"] = .bool(enabled); await store.settings(draft) }
+                    }
+                Text("Local suggestions remain available offline. Online queries send search text only. Suggestions always require confirmation of title and cut.").font(.caption).foregroundStyle(.secondary)
+                LabeledContent("TMDb credential", value: configured ? "Configured in Keychain" : "Not configured")
+                SecureField("TMDb API token", text: $token)
+                HStack {
+                    Button("Save in Keychain") { Task { await store.mutate("POST", "/metadata/credential", ["token": .string(token)]); token = ""; await load() } }.disabled(token.isEmpty || store.busy)
+                    Button("Remove credential", role: .destructive) { Task { await store.mutate("DELETE", "/metadata/credential"); await load() } }.disabled(!configured || store.busy)
                 }
-                Label("Status and reports stay compact", systemImage: "text.alignleft")
-                Label("Ripping and encoding require no AI model", systemImage: "desktopcomputer")
-                Label("Connection credentials stay on your Mac", systemImage: "key.horizontal")
-                Text("Using an AI client may consume that client's tokens. The processing engine has no model API dependency. MCP discovery requires one-time client configuration; the app cannot silently connect every AI service.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }.padding(32).frame(maxWidth: 850, alignment: .leading).frame(maxWidth: .infinity)
-        }.navigationTitle("AI connection")
+            }
+        }.formStyle(.grouped).task { await load(); online = store.status?.settings["online_lookup"].bool ?? false }
     }
+    private func load() async { configured = await store.query("GET", "/metadata/credential")?["configured"].bool ?? false }
 }

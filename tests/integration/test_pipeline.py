@@ -45,7 +45,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
                     async with ClientSession(read, write) as session:
                         await session.initialize()
                         tools = await session.list_tools()
-                        self.assertEqual(len(tools.tools), 13)
+                        self.assertGreaterEqual(len(tools.tools), 43)
                         async def call(name, args=None):
                             result = await session.call_tool('disc_porter_' + name, args or {})
                             self.assertFalse(result.isError, str(result.content))

@@ -1,0 +1,12 @@
+{
+  "arm64": {
+    "helper_sha256": "632bd51b83f177ec610860befc3541de08e999964cfcc9906bf1b03587c156a4",
+    "source_sha256": "81040e3da5f13b34ff7027154c7514755e9a940174364259f137c4b5b95dd762",
+    "tool_count": 43
+  },
+  "x86_64": {
+    "helper_sha256": "2b52b0156712215ad4d2b4b0472a33a6cd92c48166db485df1015d2cab595b03",
+    "source_sha256": "81040e3da5f13b34ff7027154c7514755e9a940174364259f137c4b5b95dd762",
+    "tool_count": 43
+  }
+}

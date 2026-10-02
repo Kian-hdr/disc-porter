@@ -1,0 +1,55 @@
+{
+  "scope": "Dependency recipe matches exact CPython release builder; this does not prove every PSF installer binary was independently rebuilt from these archives",
+  "components": [
+    {
+      "name": "OpenSSL",
+      "version": "3.0.21",
+      "url": "https://github.com/openssl/openssl/releases/download/openssl-3.0.21/openssl-3.0.21.tar.gz",
+      "expected_checksum": "617e29af8e421f46649484a4937e48c685e47f46488167c982f88bc4ec1d522f",
+      "recipe": "CPYTHON_BUILD_INSTALLER.py",
+      "status": "captured_recipe_checksum_verified",
+      "archive": "python-org-OpenSSL-3.0.21.tar.gz",
+      "sha256": "617e29af8e421f46649484a4937e48c685e47f46488167c982f88bc4ec1d522f"
+    },
+    {
+      "name": "NCurses",
+      "version": "6.5",
+      "url": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz",
+      "expected_checksum": "136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6",
+      "recipe": "CPYTHON_BUILD_INSTALLER.py",
+      "status": "captured_recipe_checksum_verified",
+      "archive": "python-org-NCurses-6.5.tar.gz",
+      "sha256": "136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6"
+    },
+    {
+      "name": "SQLite",
+      "version": "3.50.4",
+      "url": "https://www.sqlite.org/2025/sqlite-autoconf-3500400.tar.gz",
+      "expected_checksum": "a3db587a1b92ee5ddac2f66b3edb41b26f9c867275782d46c3a088977d6a5b18",
+      "recipe": "CPYTHON_BUILD_INSTALLER.py",
+      "status": "captured_recipe_checksum_verified",
+      "archive": "python-org-SQLite-3.50.4.tar.gz",
+      "sha256": "a3db587a1b92ee5ddac2f66b3edb41b26f9c867275782d46c3a088977d6a5b18"
+    },
+    {
+      "name": "libmpdec",
+      "version": "4.0.1",
+      "url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-4.0.1.tar.gz",
+      "expected_checksum": "96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8",
+      "recipe": "CPYTHON_BUILD_INSTALLER.py",
+      "status": "captured_recipe_checksum_verified",
+      "archive": "python-org-libmpdec-4.0.1.tar.gz",
+      "sha256": "96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8"
+    },
+    {
+      "name": "XZ",
+      "version": "5.2.3",
+      "url": "https://tukaani.org/xz/xz-5.2.3.tar.gz",
+      "expected_checksum": "ef68674fb47a8b8e741b34e429d86e9d",
+      "recipe": "CPYTHON_BUILD_INSTALLER.py",
+      "status": "captured_recipe_checksum_verified",
+      "archive": "python-org-XZ-5.2.3.tar.gz",
+      "sha256": "71928b357d0a09a12a4b4c5fafca8c31c19b0e7d3b8ebb19622e96f26dbf28cb"
+    }
+  ]
+}

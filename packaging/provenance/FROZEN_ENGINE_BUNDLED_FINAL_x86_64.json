@@ -1,0 +1,15 @@
+{
+  "architecture": "x86_64",
+  "api_version": 2,
+  "engine_version": "0.2.0",
+  "checks": {
+    "frozen_engine_start": true,
+    "actual_engine_frozen_mcp_43_tool_status": true,
+    "empty_queue": true,
+    "automation_disabled": true,
+    "cleanup_keep_default": true,
+    "disconnect_fence_safe": true,
+    "owned_clean_shutdown": true
+  },
+  "environment": "minimal PATH; disposable state; no imported media or acquisition; no GUI launch"
+}

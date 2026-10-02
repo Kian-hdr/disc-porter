@@ -1,90 +1,75 @@
 import SwiftUI
 
 struct ContentView: View {
-    let store: ArchiveStore
-    @State private var selection: String? = "discs"
+    @Bindable var store: ArchiveStore
+    @Environment(\.openWindow) private var openWindow
     @State private var localSource: String?
-
     var body: some View {
         NavigationSplitView {
-            List(selection: $selection) {
-                Section("Workspace") {
-                    Label("Discs", systemImage: "opticaldisc").tag("discs")
-                    Label("AI connection", systemImage: "point.3.connected.trianglepath.dotted").tag("mcp")
-                }
-                Section("Archive jobs") {
-                    if store.jobs.isEmpty {
-                        Text("No jobs yet").foregroundStyle(.secondary)
-                    }
-                    ForEach(store.jobs) { job in
-                        Label {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(job.collection).lineLimit(1)
-                                Text(job.state.capitalized).font(.caption).foregroundStyle(.secondary)
-                            }
-                        } icon: { Image(systemName: job.state == "completed" ? "checkmark.circle" : "tray.and.arrow.down") }
-                        .tag(job.id)
-                    }
-                }
-            }
-            .listStyle(.sidebar)
-            .navigationTitle("Disc Porter")
-            .navigationSplitViewColumnWidth(min: 210, ideal: 240)
+            List(WorkspaceDestination.allCases, selection: $store.destination) { destination in
+                Label(destination.title, systemImage: destination.icon).tag(destination)
+            }.listStyle(.sidebar).navigationSplitViewColumnWidth(min: 165, ideal: 190, max: 240)
         } detail: {
             VStack(spacing: 0) {
-                DisconnectBanner(store: store)
+                WorkspaceStatusView(store: store)
+                if let error = store.error { InlineErrorView(message: error) { store.error = nil } }
                 Divider()
-                if selection == "mcp" {
-                    ConnectionView()
-                } else if let job = store.jobs.first(where: { $0.id == selection }) {
-                    JobDetailView(store: store, job: job)
-                } else {
-                    DiscWorkspaceView(store: store, localSource: $localSource) { id in selection = id }
+                switch store.destination {
+                case .discs: DiscWorkspaceView(store: store, localSource: $localSource) { store.selectedJobID = $0; store.destination = .queue }
+                case .queue: QueueView(store: store)
+                case .library: LibraryView(store: store)
+                case .profiles: ProfilesView(store: store)
+                case .settings: ArchiveSettingsView(store: store)
                 }
-            }
-            .toolbar {
-                ToolbarItemGroup {
-                    Button { Task { await store.scan() } } label: { Label("Scan", systemImage: "arrow.clockwise") }
-                        .disabled(store.scanning || !store.connected).help("Read disc information without starting a rip")
-                    SettingsLink { Label("Settings", systemImage: "gearshape") }
+            }.navigationTitle(store.destination.title)
+                .toolbar {
+                    ToolbarItemGroup {
+                        Button { Task { await store.scan() } } label: { Label("Scan", systemImage: "arrow.clockwise") }.disabled(store.scanning || !store.connected)
+                        Button { store.destination = .settings } label: { Label("Settings", systemImage: "gearshape") }
+                    }
                 }
+        }
+        .onAppear {
+            let controller = store
+            let open = openWindow
+            controller.notifier.openJob = { [weak controller] id in
+                controller?.selectedJobID = id; controller?.destination = .queue; open(id: "main")
             }
         }
-        .alert("Disc Porter", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
-            Button("OK") { store.error = nil }
-        } message: { Text(store.error ?? "") }
-        .sheet(isPresented: Binding(get: { store.reportText != nil }, set: { if !$0 { store.reportText = nil } })) {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Verification report").font(.title2.bold())
-                ScrollView { Text(store.reportText ?? "").font(.system(.body, design: .monospaced)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
-                Button("Done") { store.reportText = nil }.keyboardShortcut(.defaultAction)
-            }.padding(24).frame(width: 740, height: 560)
-        }
+        .onChange(of: store.destination) { _, _ in Task { await store.refresh() } }
+
     }
 }
 
-struct DisconnectBanner: View {
+struct WorkspaceStatusView: View {
     let store: ArchiveStore
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: !store.connected ? "bolt.slash" : store.safe ? "checkmark.shield.fill" : "externaldrive.fill")
-                .font(.title3).foregroundStyle(store.safe ? Color.green : Color.orange)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(!store.connected ? "Connecting to the local engine" : store.safe ? "Disc Porter has no active writes" : "Keep the archive drive connected")
-                    .font(.headline)
-                Text(store.safe ? "Eject the SSD in Finder before unplugging. Completed checkpoints are saved." : "Prepare to disconnect finishes active work at its next checkpoint and disables automatic starts.")
-                    .font(.caption).foregroundStyle(.secondary)
+            Image(systemName: store.safe ? "checkmark.shield" : "externaldrive").foregroundStyle(store.safe ? Color.green : .secondary)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(!store.connected ? "Engine unavailable" : store.status?.disconnectFenced == true ? "Prepared to disconnect" : store.safe ? "Disc Porter has no active writes" : "Keep the archive drive connected").font(.callout.weight(.medium))
+                Text(store.safe ? "Eject in Finder before unplugging." : store.scanning ? "Reading disc information…" : "Processing continues locally when the app closes.").font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
-            if !store.connected {
-                Button("Reconnect") { Task { await store.reconnect() } }.disabled(store.busy)
-            } else {
-                Button("Prepare to disconnect") { Task { await store.prepareToDisconnect() } }
-                    .disabled(store.busy || (store.safe && store.status?.settings.autoStart != true))
+            if let free = store.status?.storage?["free_bytes"].number {
+                Text("\(ByteCountFormatter.string(fromByteCount: Int64(free), countStyle: .file)) free").font(.caption).foregroundStyle(.secondary)
             }
-        }
-        .padding(.horizontal, 24).padding(.vertical, 16)
-        .background(.thinMaterial)
-        .accessibilityElement(children: .contain)
+            if !store.connected { Button("Reconnect") { Task { await store.reconnect() } }.disabled(store.busy) }
+            else if store.status?.disconnectFenced == true { Button("Resume archiving") { Task { await store.queue("resume_archiving") } }.disabled(store.busy) }
+            else { Button("Prepare to disconnect") { Task { await store.prepareToDisconnect() } }.disabled(store.busy) }
+        }.padding(.horizontal, 20).padding(.vertical, 10)
+    }
+}
+
+private struct InlineErrorView: View {
+    let message: String
+    let dismiss: () -> Void
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle").foregroundStyle(.orange)
+            Text(message).font(.callout).textSelection(.enabled)
+            Spacer()
+            Button(action: dismiss) { Image(systemName: "xmark") }.buttonStyle(.plain).accessibilityLabel("Dismiss error")
+        }.padding(12).background(.quaternary)
     }
 }

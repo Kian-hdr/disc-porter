@@ -1,0 +1,49 @@
+{
+  "architecture": "arm64",
+  "execution_environment": "native_arm64",
+  "checks": [
+    {
+      "check": "frozen_sdk_initialize_list_status",
+      "passed": true,
+      "tool_count": 43
+    },
+    {
+      "check": "frozen_supervisor_dispatch",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx264",
+      "pixel_format": "yuv420p",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx265",
+      "pixel_format": "yuv420p",
+      "passed": true
+    },
+    {
+      "check": "synthetic_encode_probe",
+      "encoder": "libx265",
+      "pixel_format": "yuv420p10le",
+      "passed": true
+    },
+    {
+      "check": "synthetic_subtitle_burn_coretext",
+      "passed": true
+    },
+    {
+      "check": "synthetic_hardware_encode",
+      "encoder": "h264_videotoolbox",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "synthetic_hardware_encode",
+      "encoder": "hevc_videotoolbox",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

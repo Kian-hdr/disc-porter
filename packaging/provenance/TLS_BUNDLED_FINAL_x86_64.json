@@ -1,0 +1,15 @@
+{
+  "default": {
+    "ca_count": 121,
+    "certificate_verification_required": true,
+    "hostname_verification_enabled": true,
+    "expected_override_preserved": true
+  },
+  "explicit_override": {
+    "ca_count": 121,
+    "certificate_verification_required": true,
+    "hostname_verification_enabled": true,
+    "expected_override_preserved": true
+  },
+  "scope": "Actual frozen helper; no network request or credential; normal CA and hostname verification retained"
+}

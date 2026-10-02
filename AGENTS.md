@@ -1,7 +1,7 @@
-# Disc Archive
+# Disc Porter
 
-Personal macOS disc archive app. Keep repository private until Kian authorizes publication after validation. Do not acquire from physical discs during development without confirming disc identity with Kian. Do not change existing media collections. Never delete originals automatically. Keep real disc labels, titles, logs, local paths and credentials out of committed fixtures.
+Personal macOS disc archive app. Keep repository private until Kian authorizes publication after validation. Do not acquire from physical discs during development without confirming disc identity with Kian. Do not change existing media collections. Original retention defaults to Keep. Kian's explicit 0.2 plan authorizes OPTIONAL permanent cleanup of journaled app-created temporary originals after final technical verification and required stream preservation, without a manual playback gate. Never delete imported sources, final original-archive deliverables, unrelated files or originals without the enabled policy. Keep real disc labels, titles, logs, local paths and credentials out of committed fixtures.
 
 Use Build macOS Apps plugin for native UI/build work and mcp-builder for MCP. One owner per file. Tests use disposable synthetic media and temporary state. Checkpoints mean completed durable phases; an interrupted extraction/encode restarts that phase to a new candidate, not arbitrary-byte resume. Preserve previous outputs. Use exact disc identity and destination volume checks, fail closed on ambiguous content. No cloud AI dependencies in runtime.
 
-Primary owns Swift sources, Package.swift, run script and root documentation. Engine agent owns engine/ and tests/engine/. MCP agent owns mcp/ and tests/mcp/.
+0.2 ownership: engine agent owns engine/ and tests/engine/; UI agent owns Sources/, Package.swift and tests/DiscArchiveTests/; packaging agent owns packaging/, assets/, script/build_icon.sh, script/package_app.sh, script/build_helper.sh and docs/PACKAGING.md plus docs/ICON.md. Primary owns mcp/, integration tests, build/run/test wrappers and remaining documentation. Coordinate API contract changes before edits outside these targets.

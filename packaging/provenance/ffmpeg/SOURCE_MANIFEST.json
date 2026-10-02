@@ -1,0 +1,283 @@
+{
+  "capture_scope": "Exact installed FFmpeg dylib closure. Formula recipes/receipts are evidence, not proof of complete corresponding source.",
+  "archives_shipped_in_app": false,
+  "public_redistribution_status": "blocked_pending_source_and_license_review",
+  "components": [
+    {
+      "name": "dav1d",
+      "version": "1.5.4",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "dav1d-1.5.4/formula.rb",
+      "notice_files": [
+        "COPYING",
+        "SOURCE__dav1d-1.5.4__COPYING"
+      ],
+      "recipe_sha256": "3364a5bd9c26e4c9b73d756f8b99944fe3bf74e59e9ded813235c8aeaec63984",
+      "formula_declared_license": "\"BSD-2-Clause\"",
+      "source_url": "https://code.videolan.org/videolan/dav1d/-/archive/1.5.4/dav1d-1.5.4.tar.bz2",
+      "expected_sha256": "2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011",
+      "recipe_additional_source_urls": [
+        "https://code.videolan.org/videolan/dav1d-test-data/raw/1.1.0/8-bit/data/00000000.ivf"
+      ],
+      "archive": "dav1d-1.5.4.5.4.tar.bz2",
+      "archive_sha256": "2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011"
+    },
+    {
+      "name": "ffmpeg",
+      "version": "9.0.1",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "ffmpeg-9.0.1/formula.rb",
+      "notice_files": [
+        "LICENSE.md",
+        "COPYING.LGPLv2.1",
+        "COPYING.GPLv2",
+        "COPYING.GPLv3",
+        "COPYING.LGPLv3",
+        "SOURCE__ffmpeg-9.0.1__COPYING.LGPLv2.1",
+        "SOURCE__ffmpeg-9.0.1__COPYING.GPLv2",
+        "SOURCE__ffmpeg-9.0.1__COPYING.LGPLv3",
+        "SOURCE__ffmpeg-9.0.1__COPYING.GPLv3",
+        "SOURCE__ffmpeg-9.0.1__tests__checkasm__ext__src__html_data__LICENSE",
+        "SOURCE__ffmpeg-9.0.1__tests__checkasm__ext__LICENSE",
+        "SOURCE__ffmpeg-9.0.1__LICENSE.md"
+      ],
+      "recipe_sha256": "c350685d70db3a93a983062d28db5e677f7dc7651ba391a269ad6620b589073f",
+      "formula_declared_license": "\"GPL-3.0-or-later\"",
+      "source_url": "https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz",
+      "expected_sha256": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635",
+      "recipe_additional_source_urls": [
+        "https://ffmpeg.org/download.html"
+      ],
+      "archive": "ffmpeg-9.0.1.0.1.tar.xz",
+      "archive_sha256": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635"
+    },
+    {
+      "name": "lame",
+      "version": "4.0",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "lame-4.0/formula.rb",
+      "notice_files": [
+        "LICENSE",
+        "COPYING",
+        "SOURCE__lame-4.0__LICENSE",
+        "SOURCE__lame-4.0__COPYING",
+        "SOURCE__lame-4.0__debian__copyright"
+      ],
+      "recipe_sha256": "54e93fd2d82f830c4a53f56f61afb352c465ea96d37f7e34db48257c78bb5478",
+      "formula_declared_license": "\"LGPL-2.0-or-later\"",
+      "source_url": "https://downloads.sourceforge.net/project/lame/lame/4.0/lame-4.0.tar.gz",
+      "expected_sha256": "3df5124d5ad3a98312ffd7ba6a9b36230e4f8a3e66d3ce0f425e336c32d216eb",
+      "recipe_additional_source_urls": [],
+      "archive": "lame-4.0.0.tar.gz",
+      "archive_sha256": "3df5124d5ad3a98312ffd7ba6a9b36230e4f8a3e66d3ce0f425e336c32d216eb"
+    },
+    {
+      "name": "libvmaf",
+      "version": "3.2.0",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "libvmaf-3.2.0/formula.rb",
+      "notice_files": [
+        "LICENSE",
+        "SOURCE__vmaf-3.2.0__LICENSE"
+      ],
+      "recipe_sha256": "be78fefc186b3d539e7e3b20c6bbdb0fb12b50a039b15da274101cc0f34a9f79",
+      "formula_declared_license": "\"BSD-2-Clause-Patent\"",
+      "source_url": "https://github.com/Netflix/vmaf/archive/refs/tags/v3.2.0.tar.gz",
+      "expected_sha256": "a28f93f3b4fa65601be324587072e32a6a704a304ba7b1aec9b70b3f709bc1dc",
+      "recipe_additional_source_urls": [],
+      "archive": "libvmaf-3.2.0.2.0.tar.gz",
+      "archive_sha256": "a28f93f3b4fa65601be324587072e32a6a704a304ba7b1aec9b70b3f709bc1dc"
+    },
+    {
+      "name": "libvpx",
+      "version": "1.16.0",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "libvpx-1.16.0/formula.rb",
+      "notice_files": [
+        "LICENSE",
+        "SOURCE__libvpx-1.16.0__LICENSE",
+        "SOURCE__libvpx-1.16.0__third_party__googletest__src__LICENSE",
+        "SOURCE__libvpx-1.16.0__third_party__libwebm__LICENSE.TXT",
+        "SOURCE__libvpx-1.16.0__third_party__libyuv__LICENSE",
+        "SOURCE__libvpx-1.16.0__third_party__nalloc__LICENSE",
+        "SOURCE__libvpx-1.16.0__third_party__x86inc__LICENSE"
+      ],
+      "recipe_sha256": "c221276a228e690c9e97e857e2573e7b4ce4c840b13befdb4283ee22b5c6aefd",
+      "formula_declared_license": "\"BSD-3-Clause\"",
+      "source_url": "https://github.com/webmproject/libvpx/archive/refs/tags/v1.16.0.tar.gz",
+      "expected_sha256": "7a479a3c66b9f5d5542a4c6a1b7d3768a983b1e5c14c60a9396edc9b649e015c",
+      "recipe_additional_source_urls": [],
+      "archive": "libvpx-1.16.0.16.0.tar.gz",
+      "archive_sha256": "7a479a3c66b9f5d5542a4c6a1b7d3768a983b1e5c14c60a9396edc9b649e015c"
+    },
+    {
+      "name": "mpg123",
+      "version": "1.33.7",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "mpg123-1.33.7/formula.rb",
+      "notice_files": [
+        "COPYING",
+        "SOURCE__mpg123-1.33.7__COPYING",
+        "SOURCE__mpg123-1.33.7__doc__LICENSE"
+      ],
+      "recipe_sha256": "5ad4b706de97c4879ce5f4971acd1ed6acc2045974fdbc3b29f6feaffe3398be",
+      "formula_declared_license": "\"LGPL-2.1-only\"",
+      "source_url": "https://www.mpg123.de/download/mpg123-1.33.7.tar.bz2",
+      "expected_sha256": "31d0e35a4ca567ec9b5ebda6c3062bb4435d6d3eacd6ef0d95cadd7854dc03ee",
+      "recipe_additional_source_urls": [
+        "https://www.mpg123.de/download/"
+      ],
+      "archive": "mpg123-1.33.7.33.7.tar.bz2",
+      "archive_sha256": "31d0e35a4ca567ec9b5ebda6c3062bb4435d6d3eacd6ef0d95cadd7854dc03ee"
+    },
+    {
+      "name": "openssl@3",
+      "version": "3.6.4",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "openssl@3-3.6.4/formula.rb",
+      "notice_files": [
+        "LICENSE.txt",
+        "SOURCE__openssl-3.6.4__LICENSE.txt",
+        "SOURCE__openssl-3.6.4__external__perl__Text-Template-1.56__LICENSE",
+        "SOURCE__openssl-3.6.4__util__perl__OpenSSL__copyright.pm"
+      ],
+      "recipe_sha256": "6216802c53421571f69c2be676bed96c42a559e2dc6c230949f47181909a2f80",
+      "formula_declared_license": "\"Apache-2.0\"",
+      "source_url": "https://github.com/openssl/openssl/releases/download/openssl-3.6.4/openssl-3.6.4.tar.gz",
+      "expected_sha256": "9bffaa1ad1e07b354c21bd3324ec02fa15579f45a7d0494b3e74bc449b7333ef",
+      "recipe_additional_source_urls": [
+        "https://openssl-library.org/source/",
+        "https://cpan.metacpan.org/authors/id/L/LE/LEONT/Test-Harness-3.52.tar.gz",
+        "https://cpan.metacpan.org/authors/id/E/EX/EXODIST/Test-Simple-1.302224.tar.gz",
+        "https://cpan.metacpan.org/authors/id/B/BI/BINGOS/ExtUtils-MakeMaker-7.78.tar.gz"
+      ],
+      "archive": "openssl_3-3.6.4.6.4.tar.gz",
+      "archive_sha256": "9bffaa1ad1e07b354c21bd3324ec02fa15579f45a7d0494b3e74bc449b7333ef"
+    },
+    {
+      "name": "opus",
+      "version": "1.6.1",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "opus-1.6.1/formula.rb",
+      "notice_files": [
+        "COPYING",
+        "SOURCE__opus-1.6.1__COPYING"
+      ],
+      "recipe_sha256": "7ebe72e9352ceb9236cfb49c8ba7134556295ca330ea9054135b1401257f03c4",
+      "formula_declared_license": "\"BSD-3-Clause\"",
+      "source_url": "https://ftp.osuosl.org/pub/xiph/releases/opus/opus-1.6.1.tar.gz",
+      "expected_sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+      "recipe_additional_source_urls": [
+        "https://ftp.osuosl.org/pub/xiph/releases/opus/",
+        "https://gitlab.xiph.org/xiph/opus.git"
+      ],
+      "archive": "opus-1.6.1.6.1.tar.gz",
+      "archive_sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1"
+    },
+    {
+      "name": "svt-av1",
+      "version": "4.2.0",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "svt-av1-4.2.0/formula.rb",
+      "notice_files": [
+        "LICENSE.md",
+        "LICENSE-BSD2.md",
+        "SOURCE__SVT-AV1-v4.2.0__LICENSE-BSD2.md",
+        "SOURCE__SVT-AV1-v4.2.0__LICENSE.md",
+        "SOURCE__SVT-AV1-v4.2.0__third_party__fastfeat__LICENSE",
+        "SOURCE__SVT-AV1-v4.2.0__third_party__safestringlib__LICENSE"
+      ],
+      "recipe_sha256": "41c026d8329602ecc9de6f581524359836611cab34efa89c2d81ca8b02cf266a",
+      "formula_declared_license": "\"BSD-3-Clause\"",
+      "source_url": "https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v4.2.0/SVT-AV1-v4.2.0.tar.bz2",
+      "expected_sha256": "512f2ea5649e3e76c2dddcc25c2556fb67a9582baaab207c9c96161c94659dad",
+      "recipe_additional_source_urls": [
+        "https://github.com/grusell/svt-av1-homebrew-testdata/raw/main/video_64x64_yuv420p_25frames.yuv"
+      ],
+      "archive": "svt-av1-4.2.0.2.0.tar.bz2",
+      "archive_sha256": "512f2ea5649e3e76c2dddcc25c2556fb67a9582baaab207c9c96161c94659dad"
+    },
+    {
+      "name": "x264",
+      "version": "r3222",
+      "source_status": "captured_exact_revision_unverified_archive_checksum",
+      "release_duties_status": "unverified",
+      "recipe": "x264-r3222/formula.rb",
+      "notice_files": [
+        "COPYING",
+        "SOURCE__x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55__COPYING"
+      ],
+      "recipe_sha256": "9165e288b689999b374401c1045a1904102ff279fb534f514d6569fcb608e264",
+      "formula_declared_license": "\"GPL-2.0-or-later\"",
+      "source_revision": "b35605ace3ddf7c1a5d67a2eb553f034aef41d55",
+      "source_url": "https://code.videolan.org/videolan/x264/-/archive/b35605ace3ddf7c1a5d67a2eb553f034aef41d55/x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55.tar.gz",
+      "expected_sha256": null,
+      "recipe_additional_source_urls": [
+        "https://artifacts.videolan.org/x264/release-macos-arm64/"
+      ],
+      "archive": "x264-r3222.tar.gz",
+      "archive_sha256": "cd71a7515b0e9a012e1ac9b1f8415bebcaf6fc97d4db32286642ac4c0fbe24f9"
+    },
+    {
+      "name": "x265",
+      "version": "4.2",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "x265-4.2/formula.rb",
+      "notice_files": [
+        "COPYING",
+        "SOURCE__x265_4.2__COPYING",
+        "SOURCE__x265_4.2__source__dynamicHDR10__LICENSE.txt",
+        "SOURCE__x265_4.2__source__dynamicHDR10__json11__LICENSE.txt"
+      ],
+      "recipe_sha256": "ade84e50acc434797a5902cfb186f5ce65eff5bb7c02d9318739d3b0ca9d175c",
+      "formula_declared_license": "\"GPL-2.0-or-later\"",
+      "source_url": "https://bitbucket.org/multicoreware/x265_git/downloads/x265_4.2.tar.gz",
+      "expected_sha256": "40b1ea0453e0309f0eba934e0ddf533f8f6295966679e8894e8f1c1c8d5e1210",
+      "recipe_additional_source_urls": [
+        "https://raw.githubusercontent.com/fraunhoferhhi/vvenc/master/test/data/RTn23_80x44p15_f15.yuv"
+      ],
+      "archive": "x265-4.2.2.tar.gz",
+      "archive_sha256": "40b1ea0453e0309f0eba934e0ddf533f8f6295966679e8894e8f1c1c8d5e1210"
+    },
+    {
+      "name": "xz",
+      "version": "5.8.3",
+      "source_status": "captured_checksum_verified",
+      "release_duties_status": "unverified",
+      "recipe": "xz-5.8.3/formula.rb",
+      "notice_files": [
+        "COPYING.LGPLv2.1",
+        "COPYING",
+        "COPYING.0BSD",
+        "COPYING.GPLv2",
+        "COPYING.GPLv3",
+        "share__doc__xz__COPYING",
+        "share__doc__xz__COPYING.0BSD",
+        "share__doc__xz__COPYING.GPLv2",
+        "SOURCE__xz-5.8.3__COPYING",
+        "SOURCE__xz-5.8.3__COPYING.0BSD",
+        "SOURCE__xz-5.8.3__COPYING.GPLv2",
+        "SOURCE__xz-5.8.3__COPYING.GPLv3",
+        "SOURCE__xz-5.8.3__COPYING.LGPLv2.1",
+        "SOURCE__xz-5.8.3__build-aux__license-check.sh"
+      ],
+      "recipe_sha256": "0812ffeca3c6631a261e87c76ff26368eee0df6ecedfe0f458d67494fdf6e9cc",
+      "formula_declared_license": "all_of: [",
+      "source_url": "https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz",
+      "expected_sha256": "3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0",
+      "recipe_additional_source_urls": [],
+      "archive": "xz-5.8.3.8.3.tar.gz",
+      "archive_sha256": "3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0"
+    }
+  ]
+}

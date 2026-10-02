@@ -1,0 +1,11 @@
+{
+  "tests_run": 13,
+  "passed": true,
+  "failures": 0,
+  "errors": 0,
+  "expected_tool_count": 43,
+  "transport": "actual frozen helper mcp over official SDK stdio",
+  "environment": "PATH=/usr/bin:/bin; no PYTHONPATH or PYTHONHOME",
+  "contract_suite": "tests/mcp/test_bridge.py",
+  "source_sha256": "81040e3da5f13b34ff7027154c7514755e9a940174364259f137c4b5b95dd762"
+}

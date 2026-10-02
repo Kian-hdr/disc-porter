@@ -1,19 +1,26 @@
 import Foundation
 
-struct ArchiveSettings: Codable, Equatable, Sendable {
-    var outputRoot = ""
-    var autoStart = false
-    var videoCodec = "hevc"
-    var quality = 18
-    var languages = ["eng", "deu"]
-}
-
 struct ArchiveTitle: Codable, Identifiable, Equatable, Sendable {
     let id: Int
     var name: String
     var duration: String?
     var size: String?
     var selected: Bool?
+    var audioStreams: [Int]?
+    var subtitleStreams: [Int]?
+    var defaultAudioStream: Int?
+    var defaultSubtitleStream: Int?
+    var forcedSubtitleStreams: [Int]?
+    var overrides: ArchiveSettings?
+    var season: Int?
+    var episode: Int?
+    var year: Int?
+}
+
+func decodeTitles(_ raw: JSONValue) -> [ArchiveTitle] {
+    guard let data = try? JSONEncoder().encode(raw) else { return [] }
+    let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
+    return (try? decoder.decode([ArchiveTitle].self, from: data)) ?? []
 }
 
 struct ArchiveDisc: Codable, Identifiable, Equatable, Sendable {
@@ -27,6 +34,8 @@ struct ArchiveDisc: Codable, Identifiable, Equatable, Sendable {
     let titles: [ArchiveTitle]
     let message: String
     let kind: String?
+    let streamInventory: JSONValue?
+    let selectedTitles: [ArchiveTitle]?
 }
 
 struct ArchiveJob: Codable, Identifiable, Equatable, Sendable {
@@ -61,8 +70,26 @@ struct ArchiveJob: Codable, Identifiable, Equatable, Sendable {
     let pauseRequested: Bool?
     let progressBasis: String?
 
+    let revision: Int?
+    let planRevision: Int?
+    let settings: ArchiveSettings?
+    let artifacts: [JSONValue]?
+    let discStreams: JSONValue?
+    let reports: [JSONValue]?
+    let acceptance: JSONValue?
+    let cleanupStatus: JSONValue?
+    let queueOrder: Int?
+    let checkpointDetail: JSONValue?
+    let pendingChanges: JSONValue?
+    let effectiveSettings: JSONValue?
+    let generation: Int?
+
+    var originalOnly: Bool {
+        if let effectiveSettings, !effectiveSettings.object.isEmpty { return effectiveSettings.object.values.allSatisfy { $0["mode"].string == "original" } }
+        return settings?["mode"].string == "original"
+    }
     var isActive: Bool { ["running", "queued"].contains(state) }
-    var canResume: Bool { ["paused", "blocked", "failed"].contains(state) }
+    var canResume: Bool { ["paused", "blocked", "failed", "waiting_media", "waiting_destination", "waiting_power", "waiting_space"].contains(state) }
 }
 
 struct EngineStatus: Codable, Equatable, Sendable {
@@ -72,6 +99,11 @@ struct EngineStatus: Codable, Equatable, Sendable {
     let tools: [String: String?]
     let safeToDisconnect: Bool
     let message: String
+    let apiVersion: Int?
+    let engineVersion: String?
+    let disconnectFenced: Bool?
+    let storage: JSONValue?
+    let presets: [JSONValue]?
 }
 
 struct ScanReply: Decodable, Sendable { let discs: [ArchiveDisc] }
@@ -84,6 +116,14 @@ struct JobRequest: Encodable, Sendable {
     let kind: String
     let titles: [ArchiveTitle]
     let stopAfter: String
+    var presetId: String? = nil
+    var overrides: ArchiveSettings? = nil
+    var expectedSettingsRevision: Int? = nil
+    var expectedPlanFingerprint: String? = nil
+    var idempotencyKey: String? = nil
+    var rememberProfile: Bool? = nil
+    var metadata: JSONValue? = nil
+    var confirmTransforms: Bool? = nil
 }
 struct ProfileRequest: Encodable, Sendable {
     let discId: String
@@ -94,6 +134,7 @@ struct ProfileRequest: Encodable, Sendable {
 struct JobAction: Encodable, Sendable {
     let action: String
     var stopAfter: String? = nil
+    var expectedRevision: Int? = nil
 }
 
 enum Checkpoint: String, CaseIterable, Identifiable {
@@ -103,7 +144,7 @@ enum Checkpoint: String, CaseIterable, Identifiable {
         switch self {
         case .scan: "Disc identified"
         case .acquire: "Originals saved"
-        case .encode: "MP4s encoded"
+        case .encode: "Candidates encoded"
         case .verify: "Files checked"
         case .complete: "All automatic steps"
         }
@@ -112,7 +153,7 @@ enum Checkpoint: String, CaseIterable, Identifiable {
         switch self {
         case .scan: "Title selection and destination recorded."
         case .acquire: "Complete originals saved. The disc can be removed after extraction has finished."
-        case .encode: "MP4 candidates created. Originals remain available."
+        case .encode: "Candidates created with the effective recipe."
         case .verify: "Automatic stream and full decode checks finished."
         case .complete: "Automatic processing finished. Playback and content review remain separate."
         }

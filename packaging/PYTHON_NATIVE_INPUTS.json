@@ -1,0 +1,8 @@
+{
+  "files": [
+    {
+      "name": "Python.framework/Versions/3.13/Python",
+      "provider_build": "python@3.13/3.13.15"
+    }
+  ]
+}

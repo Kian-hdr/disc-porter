@@ -1,0 +1,10 @@
+.venv/
+build/
+dist/
+cache/
+sources/
+__pycache__/
+.venv-x86/
+build-arm64/
+build-x86_64/
+dist-x86/

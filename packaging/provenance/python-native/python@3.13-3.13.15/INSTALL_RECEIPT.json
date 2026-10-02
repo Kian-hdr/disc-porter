@@ -1,0 +1,103 @@
+{
+  "homebrew_version": "6.0.15-114-ga084a7d",
+  "used_options": [],
+  "unused_options": [],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "loaded_from_api": true,
+  "loaded_from_internal_api": true,
+  "installed_on_request": true,
+  "changed_files": [
+    "Frameworks/Python.framework/Versions/3.13/bin/idle3.13",
+    "Frameworks/Python.framework/Versions/3.13/bin/pip3",
+    "Frameworks/Python.framework/Versions/3.13/bin/pip3.13",
+    "Frameworks/Python.framework/Versions/3.13/bin/pydoc3.13",
+    "Frameworks/Python.framework/Versions/3.13/bin/python3.13-config",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/config-3.13-darwin/python-config.py",
+    "IDLE 3.app/Contents/MacOS/IDLE",
+    "bin/pip3.13",
+    "bin/wheel3.13",
+    "Frameworks/Python.framework/Versions/3.13/lib/pkgconfig/python-3.13-embed.pc",
+    "Frameworks/Python.framework/Versions/3.13/lib/pkgconfig/python-3.13.pc",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/_sysconfigdata__darwin_darwin.py",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/config-3.13-darwin/Makefile",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/ctypes/macholib/dyld.py",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/sitecustomize.py",
+    "Frameworks/Python.framework/Versions/3.13/lib/python3.13/sysconfig/__init__.py"
+  ],
+  "time": 1786917352,
+  "source_modified_time": 1785932743,
+  "compiler": "clang",
+  "aliases": [],
+  "runtime_dependencies": [
+    {
+      "full_name": "mpdecimal",
+      "version": "4.0.1",
+      "revision": 0,
+      "bottle_rebuild": 0,
+      "pkg_version": "4.0.1",
+      "declared_directly": true
+    },
+    {
+      "full_name": "ca-certificates",
+      "version": "2026-08-13",
+      "revision": 0,
+      "bottle_rebuild": 0,
+      "pkg_version": "2026-08-13",
+      "declared_directly": false
+    },
+    {
+      "full_name": "openssl@3",
+      "version": "3.6.3",
+      "revision": 0,
+      "bottle_rebuild": 1,
+      "pkg_version": "3.6.3",
+      "declared_directly": true
+    },
+    {
+      "full_name": "readline",
+      "version": "8.3.3",
+      "revision": 0,
+      "bottle_rebuild": 0,
+      "pkg_version": "8.3.3",
+      "declared_directly": false
+    },
+    {
+      "full_name": "sqlite",
+      "version": "3.53.4",
+      "revision": 0,
+      "bottle_rebuild": 0,
+      "pkg_version": "3.53.4",
+      "declared_directly": true
+    },
+    {
+      "full_name": "xz",
+      "version": "5.8.3",
+      "revision": 0,
+      "bottle_rebuild": 0,
+      "pkg_version": "5.8.3",
+      "declared_directly": true
+    }
+  ],
+  "source": {
+    "spec": "stable",
+    "versions": {
+      "stable": "3.13.15",
+      "head": null,
+      "version_scheme": 0,
+      "compatibility_version": null
+    },
+    "path": "<LOCAL_HOME>/Library/Caches/Homebrew/api/internal/packages.arm64_tahoe.jws.json",
+    "tap_git_head": null,
+    "tap": "homebrew/core"
+  },
+  "arch": "arm64",
+  "built_on": {
+    "os": "Macintosh",
+    "os_version": "macOS 26",
+    "cpu_family": "dunno",
+    "xcode": "26.6",
+    "clt": "26.6.0.0.1781586589",
+    "preferred_perl": "5.34"
+  }
+}

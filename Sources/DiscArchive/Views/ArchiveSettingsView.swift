@@ -3,54 +3,76 @@ import SwiftUI
 struct ArchiveSettingsView: View {
     let store: ArchiveStore
     @State private var draft = ArchiveSettings()
+    @State private var base = ArchiveSettings()
+    @State private var category = "destination"
+    @State private var search = ""
     @State private var loaded = false
     @State private var saved = false
-
     var body: some View {
-        Form {
-            Section("Archive folder") {
-                Text(draft.outputRoot.isEmpty ? "Choose a folder on your archive drive" : draft.outputRoot)
-                    .foregroundStyle(.secondary).textSelection(.enabled)
-                Button("Choose folder…") {
-                    if let path = FilePanels.folder() { draft.outputRoot = path; saved = false }
+        HSplitView {
+            List(selection: $category) {
+                ForEach(RecipeCategory.all) { Text($0.title).tag($0.id) }
+                Text("AI & metadata").tag("connection")
+                Text("Diagnostics").tag("diagnostics")
+            }.frame(minWidth: 170, idealWidth: 200, maxWidth: 240)
+            VStack(spacing: 0) {
+                if category == "connection" { ConnectionView(store: store) }
+                else if category == "diagnostics" { DiagnosticsView(store: store) }
+                else {
+                    Form {
+                        if category == "video" {
+                            Picker("Default preset", selection: Binding(get: { draft["preset_id"].string }, set: { draft["preset_id"] = .string($0) })) {
+                                ForEach(store.presets, id: \.stableID) { preset in Text(preset["name"].string).tag(preset["id"].string) }
+                            }
+                            Text("Use Profiles to inspect and duplicate presets. Manual values override the chosen recipe.").font(.caption).foregroundStyle(.secondary)
+                        }
+                        if category == "automation" {
+                            Section("macOS notifications") {
+                                LabeledContent("System permission", value: store.notificationAuthorization)
+                                HStack {
+                                    Button("Allow notifications…") { Task { await store.authorizeNotifications() } }
+                                    Button("Check permission") { Task { await store.refreshNotificationAuthorization() } }
+                                }
+                                Text("Notifications arrive while Disc Porter is running, including with its window closed. Work after Quit appears on next launch. Only Allow notifications requests macOS permission.").font(.caption).foregroundStyle(.secondary)
+                            }
+                        }
+                        if category == "tools" { Section("Installed tools") { StructuredValueView(value: store.capabilities["tools"]) } }
+                        Section(RecipeCategory.all.first { $0.id == category }?.title ?? "Settings") {
+                            RecipeEditor(draft: $draft, schema: store.schema, fields: search.isEmpty ? RecipeCategory.all.first { $0.id == category }?.fields : nil, search: search)
+                        }
+                    }.formStyle(.grouped)
+                    Divider()
+                    HStack {
+                        Text(saved ? "Settings saved" : base.revision != store.status?.settings.revision ? "Settings changed elsewhere. Reload before saving." : "Changes affect new jobs.")
+                            .font(.caption).foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Reload") { load() }
+                        Button("Save changes") {
+                            Task { await store.settings(draft, original: base); if store.error == nil { load(); saved = true } }
+                        }.buttonStyle(.borderedProminent).disabled(store.busy || !store.connected || draft.changes(from: base).isEmpty || base.revision != store.status?.settings.revision)
+                    }.padding()
                 }
-                Text("Changing this folder affects new jobs. Existing jobs keep their recorded destination.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-            Section("Automatic starts") {
-                Toggle("Start known discs when inserted", isOn: $draft.autoStart)
-                Text("Only an exact saved disc profile starts automatically. New discs need their titles and destination confirmed once. Prepare to disconnect turns this off.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-            Section("Encoding") {
-                Picker("Video", selection: $draft.videoCodec) {
-                    Text("HEVC / H.265").tag("hevc")
-                    Text("H.264 compatibility").tag("h264")
-                }
-                Stepper("Quality: CRF \(draft.quality)", value: $draft.quality, in: 14...30)
-                Text("Lower CRF values favor quality and larger files. The engine preserves supported source resolution and bit depth; unsupported sources pause for review.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-            Section("Audio and originals") {
-                Text("English and German primary audio tracks are retained when present.")
-                Text("Complete originals, including subtitles and alternate mixes, stay in the archive. No automatic deletion is enabled.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-            HStack {
-                Text(saved ? "Settings saved" : "").font(.caption).foregroundStyle(.secondary)
-                Spacer()
-                Button("Save settings") {
-                    Task { await store.settings(draft); saved = store.status?.settings == draft }
-                }.buttonStyle(.borderedProminent).disabled(!store.connected || store.busy || draft.outputRoot.isEmpty)
-            }
+            }.frame(minWidth: 450, maxWidth: .infinity, maxHeight: .infinity)
         }
-        .formStyle(.grouped)
-        .frame(width: 570, height: 670)
-        .onAppear {
-            if !loaded, let settings = store.status?.settings { draft = settings; loaded = true }
-        }
-        .onChange(of: store.status?.settings) { _, settings in
-            if !loaded, let settings { draft = settings; loaded = true }
+        .searchable(text: $search, prompt: "Search settings")
+        .onAppear { if !loaded { load() } }
+        .onChange(of: store.status?.settings) { _, _ in if !loaded { load() } }
+    }
+    private func load() { if let value = store.status?.settings { base = value; draft = value; loaded = true; saved = false } }
+}
+
+struct DiagnosticsView: View {
+    let store: ArchiveStore
+    @State private var audit: JSONValue = .null
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Processing capabilities").font(.title2)
+                StructuredValueView(value: store.capabilities)
+                Divider()
+                HStack { Text("Recent operations").font(.headline); Spacer(); Button("Refresh audit") { Task { audit = await store.query("GET", "/events?after=0&limit=30") ?? .null } } }
+                StructuredValueView(value: audit)
+            }.padding(20)
         }
     }
 }

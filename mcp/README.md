@@ -1,64 +1,49 @@
-# Disc Porter MCP
+# Disc Porter MCP 0.2
 
-Local stdio control plane built on the official MCP Python SDK. It talks only to the running Disc Porter engine's authenticated HTTP endpoint. Open the app before invoking tools. The bridge does not start or stop the engine; jobs are processed by the engine without model calls or model tokens. An agent calling this MCP server may separately consume its client's model tokens.
+The official-SDK local stdio bridge exposes 43 typed tools to the same authenticated engine used by the UI. The installed app contains its runtime and bridge; no Python, Homebrew or repository checkout is required. It can start/reconnect its processing engine without the GUI. Processing makes no model calls; an AI client's calls separately consume its own model tokens.
 
-## Setup and tests
+## Connect the installed app
 
-Python 3.10+ is required. The Mac's system Python 3.9 is insufficient; setup looks for Homebrew Python 3.13/3.12 when needed. Use `DISC_ARCHIVE_PYTHON` to select another supported interpreter. Dependencies, including transitive dependencies, are pinned in `requirements.txt` (SDK 1.30.0). Installation requires network access; runtime requires no cloud service.
-
-```bash
-./mcp/setup.sh
-./mcp/.venv/bin/python -m unittest discover -s tests/mcp -v
-./mcp/run.sh
-```
-
-`run.sh` does not install packages during an MCP handshake and writes diagnostics only to stderr. It resolves paths relative to itself, so the repository can be moved; recreate the virtual environment after moving if its Python launcher fails.
-
-## Connect a client
-
-Copy the absolute launcher path into the client's MCP server configuration. For a Codex TOML configuration, use:
+Codex configuration (use the actual installed app path):
 
 ```toml
 [mcp_servers.disc_porter]
-command = "/ABSOLUTE/PATH/disc-porter/mcp/run.sh"
+command = "/Applications/Disc Porter.app/Contents/Helpers/DiscPorterHelper/disc-porter-helper"
+args = ["mcp"]
 ```
 
-For clients using `mcpServers` JSON:
+JSON clients:
 
 ```json
-{"mcpServers":{"disc_porter":{"command":"/ABSOLUTE/PATH/disc-porter/mcp/run.sh"}}}
+{"mcpServers":{"disc_porter":{"command":"/Applications/Disc Porter.app/Contents/Helpers/DiscPorterHelper/disc-porter-helper","args":["mcp"]}}}
 ```
 
-These are templates. No client configuration is edited by setup or this repository. The GUI can show the local absolute launcher path. Avoid putting the endpoint token in client configuration.
+The GUI exports the correct path for its own installation. Reopen the client/new chat after registration. API keys and the private bearer endpoint never belong in client configuration. The development `mcp/run.sh` prefers an installed helper; `DISC_PORTER_DEV_MCP=1` selects source mode.
 
-The endpoint is `~/Library/Application Support/DiscPorter/endpoint.json`, owned by the signed-in user and mode 0600. Each tool call reloads it so an engine restart is handled without restarting MCP. `DISC_ARCHIVE_ENDPOINT_FILE` overrides its location for isolated tests. Only `http://127.0.0.1:PORT` is accepted, without credentials, extra path, query, redirects or proxy settings. Missing, stale, insecure or unauthenticated endpoints produce actionable MCP tool errors. No requests are automatically retried, because a timed-out mutation might already have been accepted. Check status before repeating it.
+## Development and tests
 
-## Tools and inputs
+```bash
+./mcp/setup.sh
+./script/test.sh
+DISC_PORTER_DEV_MCP=1 ./mcp/run.sh
+```
 
-Every tool name starts with `disc_porter_`. Inputs are flat JSON objects; extra fields, coercions, invalid enums and duplicate title selections are rejected. Results include compact JSON text and the same structured object. Engine errors use `isError: true`; tokens are redacted from responses. Output schemas are intentionally object-shaped because engine job/report fields evolve; the engine owns detailed verification truth.
+The source SDK environment is in the user's local Library/Caches folder; source bytecode also stays there to avoid provider-backed import stalls. `DISC_PORTER_MCP_ENV` can select another development environment. Test endpoints use `DISC_ARCHIVE_ENDPOINT_FILE` and never auto-start production state. Runtime stderr is diagnostic; stdout is MCP only.
 
-| Tool suffix | Inputs | Engine route |
-|---|---|---|
-| status | none | GET /status |
-| scan | none | POST /scan |
-| start_job | source_path, collection, kind, titles; optional disc_id, stop_after (default scan) | POST /jobs |
-| get_job | job_id | GET /jobs/ID |
-| get_report | job_id | GET /report/ID |
-| list_profiles | none | GET /profiles |
-| save_profile | disc_id, collection, kind, titles | POST /profiles |
-| pause_after_checkpoint | job_id | POST /jobs/ID/action |
-| next_checkpoint | job_id | POST /jobs/ID/action |
-| resume | job_id; optional stop_after | POST /jobs/ID/action |
-| cancel | job_id | POST /jobs/ID/action |
-| get_settings | none | GET /settings |
-| save_settings | output_root, auto_start, video_codec, quality, languages | POST /settings |
+## Operations
 
-Kinds: `film`, `series`, `extras`. Checkpoints: `scan`, `acquire`, `encode`, `verify`, `complete`. Titles: `[{"id":0,"name":"Chosen title"}]`. Settings codecs: `hevc`, `h264`; quality is an integer 0..51; languages use three-letter lowercase codes. Saving settings replaces the settings object. Auto-start can enable acquisition for known saved exact-disc profiles. Confirm the physical disc identity with the user before acquisition. Checkpoints commit complete phases; interrupted extraction/encoding restarts the phase, preserving originals and previous outputs. Pause is deferred to a checkpoint, not immediate. Reports do not establish physical or perceptual TV acceptance.
+Legacy status/scan/start/job/report/profile/checkpoint/settings tool names remain. Added capabilities, immutable/custom presets, revision-checked settings/profile/job edits, accepted-plan preview, atomic queue controls, stop/retry/reprocess, acceptance, asynchronous scans, local/opt-in metadata, Keychain credential status/configuration, cleanup preview/execution, library, verified exports and bounded audit.
 
-Read-only annotations apply only to status, job, report, profile list and settings reads. Scan updates discovery state, so it is a mutation. Mutations conservatively declare `destructiveHint=true`, `idempotentHint=false`. All tools are a closed local world. Annotations inform clients; they are not authorization enforcement. No shutdown tool is exposed.
+Recipes expose video/container/encoder/quality, CPU limits, audio selection/defaults, subtitle selection/default/forced flags, folders/templates, reserve space, automation and retention. Capability schemas declare actual supported values and limits. V2 mutations check engine/API version before delivery; an old engine cannot silently ignore an original-mode or custom-recipe request.
 
-## Verification and references
+Create jobs with a stable `idempotency_key`; reuse it after ambiguous timeouts. Preview first and pass `expected_plan_fingerprint` with `expected_settings_revision` to preserve the accepted recipe across independent preset/profile edits. Resource patches require `expected_revision`. Conflicts return actionable errors. Requests are not automatically retried after read timeouts.
 
-Tests perform actual official-SDK stdio initialization, tools/list, schema and annotation checks, all 13 HTTP routes, input rejection before any HTTP action, credential rejection/redaction, missing/insecure/remote/stale endpoint cases, JSON errors and endpoint refresh. All data are disposable synthetic fixtures; no real discs or archives are used. `evaluation.xml` contains ten stable read-only fixture questions; the test verifies expected answers deterministically. No language-model evaluation or effectiveness score is claimed.
+Cleanup is permanent only under enabled delete_verified policy and validated ownership/technical gates. Imported sources, final original deliverables and foreign-job original references remain protected. Reports separate technical validation, retention and manually supplied playback/quality acceptance. Never fabricate acceptance observations.
 
-Implementation references: [official Python SDK](https://github.com/modelcontextprotocol/python-sdk), [MCP tools specification](https://modelcontextprotocol.io/specification/2025-11-25/server/tools), [stdio transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports). Local HTTP routes follow `docs/API.md`.
+## Local boundary and evidence
+
+Transport is stdio plus loopback bearer HTTP. Endpoint must be owned by this user, mode0600 and not a symlink. Only 127.0.0.1 HTTP is accepted; proxies/redirects/remote endpoints are rejected. Browser Origin is rejected by the engine. Tokens and metadata credentials are redacted from outputs. Audit labels are attribution, not authenticated human identity proof.
+
+13 bridge tests exercise the actual SDK transport, all 43 routes/schema categories, strict input rejection, credentials/redaction, version gates and errors. Frozen ARM/Intel helpers ran the same tests; real backend/MCP roundtrips and media integration are recorded in [0.2 validation](../docs/VALIDATION_0_2.md). Tests use generated fixtures and never write production Keychain credentials.
+
+[API contract](../docs/API_V2.md) · [official SDK](https://github.com/modelcontextprotocol/python-sdk) · [MCP tools](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)

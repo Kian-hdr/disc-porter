@@ -1,187 +1,202 @@
 import SwiftUI
-import AppKit
 
 struct DiscWorkspaceView: View {
     let store: ArchiveStore
     @Binding var localSource: String?
     let didStart: (String) -> Void
-
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 18) {
                 HStack {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Your discs, safely archived.").font(.largeTitle.bold())
-                        Text("Insert a disc. Disc Porter remembers its identity, folders and checkpoints.")
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
+                    Text("Sources").font(.title2.weight(.semibold)); Spacer()
+                    Button("Choose video…") { Task { localSource = await FilePanels.media() } }.disabled(!store.connected)
                 }
                 if store.status?.settings.outputRoot.isEmpty != false {
-                    GroupBox {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Label("Choose an archive folder to get started", systemImage: "folder.badge.plus").font(.headline)
-                            Text("Use a folder on your SSD. Originals and MP4s stay together; the job history also stays on your Mac.")
-                                .foregroundStyle(.secondary)
-                            Button("Choose archive folder…") {
-                                if let path = FilePanels.folder() {
-                                    var settings = store.status?.settings ?? ArchiveSettings()
-                                    settings.outputRoot = path
-                                    Task { await store.settings(settings) }
-                                }
-                            }.buttonStyle(.borderedProminent).disabled(!store.connected)
-                        }.frame(maxWidth: .infinity, alignment: .leading).padding(12)
-                    }
+                    HStack { Label("Choose an archive folder in Settings before starting.", systemImage: "folder.badge.plus"); Spacer(); Button("Open Settings") { store.destination = .settings } }
+                        .padding().background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
                 }
                 if store.discs.isEmpty && localSource == nil {
-                    ContentUnavailableView {
-                        Label(store.scanning ? "Reading disc information" : "Ready for your next disc", systemImage: "opticaldisc")
-                    } description: {
-                        Text("Connect your DVD or Blu-ray drive, insert a disc and choose Scan. Saved disc profiles can start automatically when enabled in Settings.")
-                    } actions: {
-                        if store.scanning {
-                            ProgressView("Scanning disc information…").controlSize(.small)
-                        } else {
-                            Button("Scan for discs") { Task { await store.scan() } }.disabled(!store.connected)
-                        }
-                    }.frame(minHeight: 200)
+                    ContentUnavailableView(store.scanning ? "Reading discs" : "Ready for a source", systemImage: "opticaldisc", description: Text("Insert a disc and Scan, or choose a local video. Unknown discs require confirmed title mappings."))
                 }
-                ForEach(store.discs) { disc in
-                    DiscIdentificationView(store: store, disc: disc, localSource: nil, didStart: didStart)
-                        .id(disc.id)
-                }
-                if let localSource {
-                    DiscIdentificationView(store: store, disc: nil, localSource: localSource, didStart: didStart)
-                        .id(localSource)
-                }
-                Divider()
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Already have an original video?").font(.headline)
-                        Text("Archive a local MKV or other video through the same checkpoint workflow.")
-                            .font(.caption).foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("Choose video…") { localSource = FilePanels.media() }.disabled(!store.connected)
-                }
-                if let tools = store.status?.tools {
-                    HStack(spacing: 20) {
-                        ForEach(["makemkv", "ffmpeg", "ffprobe"], id: \.self) { name in
-                            Label(name == "makemkv" ? "MakeMKV" : name.uppercased(), systemImage: tools[name] ?? nil != nil ? "checkmark.circle" : "exclamationmark.circle")
-                                .font(.caption).foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            }.padding(28).frame(maxWidth: 900, alignment: .leading).frame(maxWidth: .infinity)
+                ForEach(store.discs, id: \.sourcePath) { disc in DiscComposerView(store: store, disc: disc, localSource: nil, didStart: didStart).id(disc.id + disc.sourcePath) }
+                if let localSource { DiscComposerView(store: store, disc: nil, localSource: localSource, didStart: didStart).id(localSource) }
+            }.padding(20)
         }
-        .navigationTitle("Discs")
     }
 }
 
-private struct TitleSelection: Identifiable {
-    let id: Int
-    var selected: Bool
-    var name: String
-    let detail: String
-}
-
-struct DiscIdentificationView: View {
+struct DiscComposerView: View {
     let store: ArchiveStore
     let disc: ArchiveDisc?
     let localSource: String?
     let didStart: (String) -> Void
     @State private var collection = ""
     @State private var kind = "film"
-    @State private var titles: [TitleSelection] = []
-    @State private var stopAfter = Checkpoint.complete
+    @State private var titles: [TitleDraft] = []
+    @State private var confirmed = false
     @State private var remember = true
-    @State private var namesConfirmed = false
-
-    var ready: Bool {
-        !collection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        titles.contains(where: \.selected) &&
-        titles.filter(\.selected).allSatisfy { !$0.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } &&
-        namesConfirmed && store.status?.settings.outputRoot.isEmpty == false && !store.busy
+    @State private var stopAfter = "complete"
+    @State private var presetID = "balanced"
+    @State private var overrides = ArchiveSettings()
+    @State private var customize = false
+    @State private var preview: JSONValue = .null
+    @State private var previewFingerprint = ""
+    @State private var previewSettingsRevision = 0
+    @State private var suggestions: [JSONValue] = []
+    @State private var query = ""
+    @State private var previewing = false
+    @State private var confirmTransforms = false
+    @State private var startAttempt = StartAttempt()
+    private var sourcePath: String { disc?.sourcePath ?? localSource ?? "" }
+    private var fingerprint: String {
+        let encoder = JSONEncoder(); encoder.outputFormatting = .sortedKeys
+        return String(decoding: (try? encoder.encode(request)) ?? Data(), as: UTF8.self)
     }
-
+    private var request: JobRequest {
+        var request = JobRequest(sourcePath: sourcePath, discId: disc?.id, collection: collection, kind: kind, titles: titles.filter(\.selected).map(\.title), stopAfter: stopAfter)
+        request.presetId = presetID
+        request.overrides = customize ? overrides : nil
+        request.rememberProfile = disc != nil && remember
+        request.expectedSettingsRevision = store.status?.settings.revision
+        request.confirmTransforms = confirmTransforms
+        return request
+    }
+    private var ready: Bool { confirmed && !collection.trimmingCharacters(in: .whitespaces).isEmpty && titles.contains(where: \.selected) && titles.filter(\.selected).allSatisfy { !$0.name.trimmingCharacters(in: .whitespaces).isEmpty && $0.metadataValid } }
+    private var previewCurrent: Bool { previewFingerprint == fingerprint && previewSettingsRevision == store.status?.settings.revision }
     var body: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 18) {
-                HStack(alignment: .top, spacing: 14) {
-                    Image(systemName: disc == nil ? "film" : "opticaldisc").font(.system(size: 32)).foregroundStyle(.tint).accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(disc?.label ?? URL(fileURLWithPath: localSource ?? "").lastPathComponent).font(.title2.bold())
-                        Text(disc == nil ? "Local video source" : "\(disc!.format) · \(disc!.identified ? "Saved disc profile" : "First-time identification")")
-                            .font(.subheadline).foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                }
-                if let disc, !disc.message.isEmpty {
-                    Text(disc.message).font(.callout).foregroundStyle(.secondary)
-                }
-                Text("Confirm unfamiliar discs once. Saved profiles match the disc fingerprint and reuse these folders and names.")
-                    .font(.callout).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    TextField("Collection name", text: $collection).textFieldStyle(.roundedBorder)
-                        .accessibilityLabel("Collection folder name")
-                    Picker("Content", selection: $kind) {
-                        Text("Film").tag("film")
-                        Text("Series").tag("series")
-                        Text("Extras").tag("extras")
-                    }.frame(width: 170)
+                    Label(disc?.label ?? URL(fileURLWithPath: sourcePath).lastPathComponent, systemImage: disc == nil ? "film" : "opticaldisc").font(.headline)
+                    Spacer(); Text(disc?.format ?? "Local source").foregroundStyle(.secondary)
                 }
-                if titles.isEmpty {
-                    Label("No title information available. Scan again after the drive is ready.", systemImage: "info.circle")
-                        .foregroundStyle(.secondary)
-                } else {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Titles to archive").font(.headline)
-                        Text(kind == "series" ? "Use the verified episode name, for example S01E01_Episode_Title. Disc order alone may differ from episode order." : "Select the intended cut and give each file a clear name.")
-                            .font(.caption).foregroundStyle(.secondary)
-                        ForEach($titles) { $title in
-                            HStack(spacing: 12) {
-                                Toggle("Title \(title.id)", isOn: $title.selected).frame(width: 100, alignment: .leading)
-                                TextField("File name", text: $title.name).textFieldStyle(.roundedBorder)
-                                    .accessibilityLabel("File name for title \(title.id)")
-                                Text(title.detail).font(.caption).foregroundStyle(.secondary).frame(width: 120, alignment: .trailing)
+                if let message = disc?.message { Text(message).font(.caption).foregroundStyle(.secondary) }
+                HStack {
+                    TextField("Collection", text: $collection)
+                    Picker("Kind", selection: $kind) { Text("Film").tag("film"); Text("Series").tag("series"); Text("Extras").tag("extras") }.frame(width: 185)
+                }
+                ForEach($titles) { $title in TitleSelectionView(title: $title, kind: kind, schema: store.schema, fallback: ArchiveSettings(values: store.presets.first { $0["id"].string == presetID }?["settings"].object ?? [:])) }
+                if titles.isEmpty { Text("Title information is unavailable. Scan again before starting.").foregroundStyle(.secondary) }
+                DisclosureGroup("Identify this source") {
+                    HStack {
+                        TextField("Search title", text: $query)
+                        Button("Local suggestions") { identify("local") }
+                        Button("Online suggestions") { identify("tmdb") }.disabled(store.status?.settings["online_lookup"].bool != true)
+                    }
+                    ForEach(suggestions, id: \.stableID) { suggestion in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(suggestion["title"].string)
+                                Text("\(suggestion["provider"].display) · \(suggestion["evidence"].display)").font(.caption).foregroundStyle(.secondary)
+                            }
+                            if let url = URL(string: suggestion["evidence"].string), ["https", "http"].contains(url.scheme ?? "") { Link("Source", destination: url) }
+                            Spacer(); Button("Use suggestion") {
+                                collection = suggestion["title"].string
+                                if ["film", "series", "extras"].contains(suggestion["kind"].string) { kind = suggestion["kind"].string }
+                                if titles.count == 1 { titles[0].name = collection; if let year = suggestion["year"].number { titles[0].year = String(Int(year)) } }
+                                confirmed = false
                             }
                         }
                     }
+                    Text("Suggestions do not establish episode order, cut or content identity. Confirm the mapping below.").font(.caption).foregroundStyle(.secondary)
                 }
-                Toggle("I checked the title selection and file names", isOn: $namesConfirmed)
-                if disc != nil { Toggle("Remember this disc for future automatic starts", isOn: $remember) }
-                Divider()
                 HStack {
-                    Picker("Work until", selection: $stopAfter) {
-                        ForEach(Checkpoint.allCases) { checkpoint in Text(checkpoint.title).tag(checkpoint) }
-                    }.frame(maxWidth: 370)
-                    Spacer()
-                    Button("Start archive") { start() }.buttonStyle(.borderedProminent).controlSize(.large)
-                        .disabled(!ready).keyboardShortcut(.defaultAction)
+                    Picker("Preset", selection: $presetID) {
+                        ForEach(store.presets, id: \.stableID) { Text($0["name"].string).tag($0["id"].string) }
+                    }
+                    Picker("Stop after", selection: $stopAfter) { ForEach(Checkpoint.allCases) { Text($0.title).tag($0.rawValue) } }
                 }
-                Text(stopAfter.explanation).font(.caption).foregroundStyle(.secondary)
-            }.padding(14)
+                Toggle("Manual recipe overrides", isOn: $customize)
+                if customize {
+                    DisclosureGroup("Video, audio, subtitles and retention") {
+                        Form { RecipeEditor(draft: $overrides, schema: store.schema, fields: RecipeCategory.all.filter { ["video", "audio", "subtitles", "retention"].contains($0.id) }.flatMap(\.fields), fallback: ArchiveSettings(values: store.presets.first { $0["id"].string == presetID }?["settings"].object ?? [:])) }
+                            .formStyle(.grouped).frame(minHeight: 340)
+                    }
+                }
+                Toggle("I checked the selected titles, cuts and file names", isOn: $confirmed)
+                if disc != nil { Toggle("Remember this confirmed disc mapping", isOn: $remember) }
+                if let localSource { DisclosureGroup("Source preview") { MediaPreviewView(path: localSource) } }
+                if preview != .null {
+                    GroupBox("Archive preview") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            LabeledContent("Mode", value: choiceLabel(preview["effective_settings"]["mode"].string))
+                            LabeledContent("Video", value: preview["effective_settings"]["video_codec"].string.uppercased())
+                            LabeledContent("Container", value: preview["effective_settings"]["output_container"].string.uppercased())
+                            StructuredValueView(value: preview["destinations"])
+                            if !preview["transforms"].array.isEmpty { StructuredValueView(value: preview["transforms"]) }
+                            if !preview["reason"].string.isEmpty { Text(preview["reason"].string).foregroundStyle(.orange) }
+                            DisclosureGroup("Advanced effective recipe") { StructuredValueView(value: preview["title_settings"]) }
+                        }.padding(8)
+                    }
+                    if preview["requires_confirmation"].bool {
+                        Toggle("Approve the listed source transformations", isOn: $confirmTransforms)
+                    }
+                    if !previewCurrent { Text("The plan changed. Refresh the preview before starting.").font(.caption).foregroundStyle(.orange) }
+                }
+                HStack {
+                    Button(previewing ? "Checking…" : "Preview archive") { Task { await makePreview() } }.disabled(!ready || previewing || store.busy)
+                    Spacer()
+                    Button("Start archive") { Task {
+                        let plan = preview["plan_fingerprint"].string
+                        var accepted = request
+                        accepted.expectedPlanFingerprint = plan
+                        accepted.idempotencyKey = startAttempt.key(for: plan + ":" + fingerprint)
+                        if let id = await store.start(accepted, saveProfile: disc != nil && remember) { startAttempt.completed(); didStart(id) }
+                    } }
+                        .buttonStyle(.borderedProminent).disabled(!ready || !previewCurrent || !preview["can_apply"].bool || store.busy || store.status?.disconnectFenced == true || preview["requires_confirmation"].bool && !confirmTransforms || preview["plan_fingerprint"].string.isEmpty)
+                }
+            }.padding(12).textFieldStyle(.roundedBorder)
+        }.onAppear { seed() }.task {
+            if store.presets.isEmpty { store.presets = await store.query("GET", "/presets")?["presets"].array ?? [] }
+            if disc == nil { await loadLocalInventory() }
         }
-        .onAppear { seed() }
     }
-
     private func seed() {
-        collection = disc?.collection ?? (disc?.label ?? URL(fileURLWithPath: localSource ?? "").deletingPathExtension().lastPathComponent)
-        kind = disc?.kind ?? "film"
+        collection = disc?.collection ?? disc?.label ?? URL(fileURLWithPath: sourcePath).deletingPathExtension().lastPathComponent
+        query = collection; kind = disc?.kind ?? "film"; presetID = store.status?.settings["preset_id"].string ?? "balanced"
+        stopAfter = store.status?.settings["default_checkpoint"].string ?? "complete"
         if let disc {
-            titles = disc.titles.map { TitleSelection(id: $0.id, selected: $0.selected ?? false, name: $0.name,
-                detail: [$0.duration, $0.size].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")) }
-            namesConfirmed = disc.identified
-        } else {
-            titles = [TitleSelection(id: 0, selected: true, name: collection, detail: "Local source")]
+            titles = disc.titles.map { title in
+                var draft = TitleDraft(id: title.id, selected: title.selected == true, name: title.name, duration: title.duration ?? "")
+                if let mapped = disc.selectedTitles?.first(where: { $0.id == title.id }) {
+                    draft.audioIDs = Set(mapped.audioStreams ?? []); draft.subtitleIDs = Set(mapped.subtitleStreams ?? [])
+                    draft.manualAudio = mapped.audioStreams != nil; draft.manualSubtitles = mapped.subtitleStreams != nil
+                    draft.season = mapped.season.map(String.init) ?? ""; draft.episode = mapped.episode.map(String.init) ?? ""; draft.year = mapped.year.map(String.init) ?? ""
+                    draft.overrides = mapped.overrides
+                    draft.defaultAudioID = mapped.defaultAudioStream; draft.defaultSubtitleID = mapped.defaultSubtitleStream
+                    draft.overrideForced = mapped.forcedSubtitleStreams != nil; draft.forcedIDs = Set(mapped.forcedSubtitleStreams ?? [])
+                }
+                draft.streams = inventory(disc.streamInventory?[String(title.id)] ?? .null)
+                return draft
+            }; confirmed = disc.identified
+        } else { titles = [.init(id: 0, selected: true, name: collection)] }
+    }
+    private func inventory(_ raw: JSONValue) -> [JSONValue] {
+        if !raw.array.isEmpty { return raw.array }
+        return raw.object.keys.sorted().map { key in var stream = raw[key]; stream["index"] = .number(Double(key) ?? 0); return stream }
+    }
+    private func loadLocalInventory() async {
+        if let value = await store.query("POST", "/identify", ["provider": .string("local"), "source_path": .string(sourcePath), "query": .string(query)]) {
+            suggestions = value["suggestions"].array
+            let raw = value["technical_inventory"]
+            let streams = raw.array.isEmpty ? raw["streams"].array : raw.array
+            if !titles.isEmpty { titles[0].streams = streams }
         }
     }
-    private func start() {
-        let selected = titles.filter(\.selected).map { ArchiveTitle(id: $0.id, name: $0.name) }
-        let request = JobRequest(sourcePath: disc?.sourcePath ?? localSource ?? "", discId: disc?.id,
-            collection: collection, kind: kind, titles: selected, stopAfter: stopAfter.rawValue)
+    private func identify(_ provider: String) {
         Task {
-            if let id = await store.start(request, saveProfile: remember && disc != nil) { didStart(id) }
+            var body: [String: JSONValue] = ["provider": .string(provider), "query": .string(query)]
+            if let disc { body["disc_id"] = .string(disc.id) }
+            else if provider == "local" { body["source_path"] = .string(sourcePath) }
+            suggestions = await store.query("POST", "/identify", body)?["suggestions"].array ?? []
         }
+    }
+    private func makePreview() async {
+        previewing = true; defer { previewing = false }
+        let encoder = JSONEncoder(); encoder.keyEncodingStrategy = .convertToSnakeCase
+        guard let data = try? encoder.encode(request), let body = try? JSONDecoder().decode(JSONValue.self, from: data) else { return }
+        let originalFingerprint = fingerprint; let originalRevision = store.status?.settings.revision ?? 0
+        preview = await store.query("POST", "/jobs/preview", body.object) ?? .null
+        previewFingerprint = originalFingerprint; previewSettingsRevision = originalRevision
     }
 }

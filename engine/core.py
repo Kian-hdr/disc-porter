@@ -274,7 +274,7 @@ class Engine:
         # Only mounted paths are considered; never create or acquire from them.
         discs = []
         if self.tools.get('makemkv'):
-            r = subprocess.run([self.tools['makemkv'], '-r', '--minlength=0', 'info', 'disc:9999'], capture_output=True, text=True, timeout=90)
+            r = self._capture([self.tools['makemkv'], '-r', '--minlength=0', 'info', 'disc:9999'], timeout=90)
             if r.returncode:
                 raise ArchiveError('MakeMKV scan failed: ' + r.stderr[-400:])
             for row in robot_records(r.stdout, 'DRV'):
@@ -284,7 +284,7 @@ class Engine:
                 if not mount_path: continue
                 try:
                     fp, fmt = snapshot(mount_path)
-                    info = subprocess.run([self.tools['makemkv'], '-r', '--minlength=0', 'info', 'disc:' + row[0]], capture_output=True, text=True, timeout=120)
+                    info = self._capture([self.tools['makemkv'], '-r', '--minlength=0', 'info', 'disc:' + row[0]], timeout=120)
                     if info.returncode:
                         raise ArchiveError('MakeMKV title inspection failed')
                     titles = {}
@@ -293,6 +293,7 @@ class Engine:
                             item = titles.setdefault(int(t[0]), dict(id=int(t[0]), name='Unidentified title ' + t[0], duration='', size='', selected=False))
                             if t[1] == '9': item['duration'] = t[3]
                             if t[1] == '10': item['size'] = t[3]
+                            if t[1] == '11' and t[3].isdigit(): item['bytes'] = int(t[3])
                     inventory = {}
                     for stream in robot_records(info.stdout, 'SINFO'):
                         if len(stream) >= 5 and stream[0].isdigit() and stream[1].isdigit():
@@ -487,7 +488,9 @@ class Engine:
             out.write(json.dumps(command) + '\n'); out.flush()
             # Shared inherited owner descriptor keeps lock until supervisor kills an
             # orphaned tool. A new engine cannot falsely report safe while it runs.
-            process = subprocess.Popen([sys.executable, str(Path(__file__).with_name('runner.py')), str(os.getpid()), *command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, pass_fds=(self.lockfile.fileno(),))
+            supervisor = [sys.executable, 'supervise', str(os.getpid()), '--', *command] if getattr(sys, 'frozen', False) else [sys.executable, str(Path(__file__).with_name('runner.py')), str(os.getpid()), *command]
+            process = subprocess.Popen(supervisor, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, pass_fds=(self.lockfile.fileno(),))
+            self._process_started(process, job)
             def read_output():
                 for line in process.stdout: lines.put(line)
                 lines.put(None)
@@ -526,8 +529,8 @@ class Engine:
                     job.update(current_title=title, elapsed_seconds=round(elapsed,3), processed_bytes=current_bytes or None, total_bytes=None, throughput_bps=round(current_bytes/elapsed,2) if current_bytes and elapsed else None, eta_seconds=((duration-current_time)*elapsed/current_time) if duration and current_time and duration>current_time else None, heartbeat_at=now(), stall_reason='No measured tool progress for 120 seconds; engine heartbeat continues; review media progress' if time.monotonic()-advanced>120 else None)
                     self._job_save(job); last_persist=time.monotonic()
                 if timeout and elapsed>timeout:
-                    process.terminate(); process.wait(timeout=10); raise ArchiveError('Processing timed out; candidate retained')
-            code=process.wait(); reader.join(timeout=1); process.stdout.close()
+                    process.terminate(); process.wait(); reader.join(timeout=1); process.stdout.close(); self._process_finished(process); raise ArchiveError('Processing timed out; candidate retained')
+            code=process.wait(); reader.join(timeout=1); process.stdout.close(); self._process_finished(process)
         if code: raise ArchiveError('Processing failed (exit ' + str(code) + '); inspect ' + str(log))
 
     def _verify_acquired_inventory(self, job, title, probe):
@@ -542,9 +545,18 @@ class Engine:
                     if sum(language(v)=={'ger':'deu'}.get(lang,lang) for v in actual)<sum(v.get('3')==lang for v in expected_streams):
                         raise ArchiveError('Acquisition omitted source ' + kind + ' language ' + lang)
 
+    def _capture(self, command, timeout=120):
+        return subprocess.run(command, capture_output=True, text=True, timeout=timeout)
+
+    def _process_started(self, process, job=None):
+        pass
+
+    def _process_finished(self, process):
+        pass
+
     def probe(self, path):
         if not self.tools.get('ffprobe'): raise ArchiveError('ffprobe is unavailable')
-        r = subprocess.run([self.tools['ffprobe'], '-v', 'error', '-show_streams', '-show_format', '-show_chapters', '-of', 'json', str(path)], capture_output=True, text=True, timeout=120)
+        r = self._capture([self.tools['ffprobe'], '-v', 'error', '-show_streams', '-show_format', '-show_chapters', '-of', 'json', str(path)], timeout=120)
         if r.returncode: raise ArchiveError('Media probe failed: ' + r.stderr[-500:])
         value = json.loads(r.stdout)
         if not any(s['codec_type'] == 'video' for s in value.get('streams', [])):
@@ -579,7 +591,7 @@ class Engine:
 
     def _acquire(self, job):
         attempt = self._attempt(job, 'acquire'); artifacts = job['artifacts']
-        original_dir = Path(job['output_path']) / 'Original_MKV'
+        original_dir = Path(job.get('_original_dir', Path(job['output_path']) / 'Original_MKV'))
         self._safe_descendant(job, original_dir)
         original_dir.mkdir(exist_ok=True)
         for title in job['titles']:
