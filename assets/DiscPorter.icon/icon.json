@@ -7,8 +7,8 @@
     {
       "value": {
         "linear-gradient": [
-          "srgb:0.055,0.40,0.90,1",
-          "srgb:0.025,0.16,0.46,1"
+          "srgb:0.99,0.99,1,1",
+          "srgb:0.84,0.87,0.92,1"
         ]
       }
     },
@@ -16,8 +16,8 @@
       "appearance": "dark",
       "value": {
         "linear-gradient": [
-          "srgb:0.035,0.20,0.45,1",
-          "srgb:0.015,0.055,0.14,1"
+          "srgb:0.18,0.20,0.25,1",
+          "srgb:0.055,0.07,0.10,1"
         ]
       }
     },
@@ -28,122 +28,138 @@
   ],
   "groups": [
     {
-      "name": "Transfer",
+      "layers": [
+        {
+          "glass": false,
+          "image-name": "sleeve-seam.svg",
+          "name": "Seam"
+        }
+      ],
       "lighting": "individual",
+      "name": "Sleeve stitching",
+      "shadow": {
+        "kind": "none",
+        "opacity": 0
+      },
       "specular": false,
       "translucency": {
         "enabled": false,
         "value": 0
-      },
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.15
-      },
+      }
+    },
+    {
+      "blur-material": 0.05,
       "layers": [
         {
-          "name": "Forward arrow",
-          "image-name": "arrow.svg",
-          "glass": false,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.98,0.99,1,1"
+                "linear-gradient": [
+                  "srgb:0.34,0.50,1,1",
+                  "srgb:0.13,0.28,0.79,1"
+                ]
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.84,0.94,1,1"
+                "linear-gradient": [
+                  "srgb:0.31,0.47,0.96,1",
+                  "srgb:0.12,0.24,0.65,1"
+                ]
               }
             },
             {
               "appearance": "tinted",
-              "value": "automatic"
+              "value": {
+                "solid": "gray:0.94,1"
+              }
             }
-          ]
+          ],
+          "glass": true,
+          "image-name": "sleeve-front.svg",
+          "name": "Front"
         }
-      ]
-    },
-    {
-      "name": "Archive tray",
+      ],
       "lighting": "individual",
-      "specular": true,
-      "specular-highlight-placement": "inside",
-      "blur-material": 0.15,
+      "name": "Archive sleeve",
       "refractivity": {
+        "depth": 0.18,
         "enabled": true,
-        "strength": 0.25,
-        "depth": 0.3
-      },
-      "translucency": {
-        "enabled": true,
-        "value": 0.12
+        "strength": 0.12
       },
       "shadow": {
         "kind": "neutral",
         "opacity": 0.25
       },
+      "specular": true,
+      "specular-highlight-placement": "inside",
+      "translucency": {
+        "enabled": true,
+        "value": 0.05
+      }
+    },
+    {
+      "blur-material": 0.05,
       "layers": [
         {
-          "name": "Archive tray",
-          "image-name": "tray.svg",
-          "glass": true,
+          "image-name": "disc.svg",
+          "name": "Brushed silver and prism",
           "fill-specializations": [
             {
+              "appearance": "tinted",
               "value": {
-                "linear-gradient": [
-                  "srgb:0.32,0.73,1,1",
-                  "srgb:0.07,0.42,0.85,1"
-                ]
+                "solid": "gray:1,1"
               }
-            },
+            }
+          ],
+          "glass-specializations": [
             {
-              "appearance": "dark",
-              "value": {
-                "linear-gradient": [
-                  "srgb:0.26,0.67,1,1",
-                  "srgb:0.06,0.30,0.70,1"
-                ]
-              }
+              "value": false
             },
             {
               "appearance": "tinted",
-              "value": "automatic"
+              "value": true
             }
           ]
+        }
+      ],
+      "lighting": "individual",
+      "name": "Optical disc",
+      "refractivity": {
+        "depth": 0.18,
+        "enabled": true,
+        "strength": 0.12
+      },
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.2
+      },
+      "specular-highlight-placement": "inside",
+      "translucency": {
+        "enabled": true,
+        "value": 0
+      },
+      "specular-specializations": [
+        {
+          "value": false
+        },
+        {
+          "appearance": "tinted",
+          "value": true
         }
       ]
     },
     {
-      "name": "Optical disc",
-      "lighting": "individual",
-      "specular": true,
-      "specular-highlight-placement": "inside",
-      "blur-material": 0.15,
-      "refractivity": {
-        "enabled": true,
-        "strength": 0.3,
-        "depth": 0.3
-      },
-      "translucency": {
-        "enabled": true,
-        "value": 0.15
-      },
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.3
-      },
+      "blur-material": 0.05,
       "layers": [
         {
-          "name": "Silver disc",
-          "image-name": "disc.svg",
-          "glass": true,
           "fill-specializations": [
             {
               "value": {
                 "linear-gradient": [
-                  "srgb:0.96,0.99,1,1",
-                  "srgb:0.53,0.70,0.88,1"
+                  "srgb:0.22,0.35,0.73,1",
+                  "srgb:0.11,0.21,0.50,1"
                 ]
               }
             },
@@ -151,18 +167,40 @@
               "appearance": "dark",
               "value": {
                 "linear-gradient": [
-                  "srgb:0.90,0.98,1,1",
-                  "srgb:0.38,0.60,0.84,1"
+                  "srgb:0.24,0.39,0.78,1",
+                  "srgb:0.10,0.18,0.42,1"
                 ]
               }
             },
             {
               "appearance": "tinted",
-              "value": "automatic"
+              "value": {
+                "solid": "gray:0.70,1"
+              }
             }
-          ]
+          ],
+          "glass": true,
+          "image-name": "sleeve-back.svg",
+          "name": "Back"
         }
-      ]
+      ],
+      "lighting": "individual",
+      "name": "Archive sleeve back",
+      "refractivity": {
+        "depth": 0.18,
+        "enabled": true,
+        "strength": 0.12
+      },
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.17
+      },
+      "specular": true,
+      "specular-highlight-placement": "inside",
+      "translucency": {
+        "enabled": true,
+        "value": 0.05
+      }
     }
   ],
   "supported-platforms": {

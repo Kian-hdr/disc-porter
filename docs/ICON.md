@@ -1,10 +1,10 @@
 # Disc Porter app icon
 
-Original vector artwork: a silver optical disc above a blue archive tray with a forward arrow. No text, external artwork, embedded fonts or raster source assets are used. Each motif is a separate editable SVG and Icon Composer group.
+Original vector artwork: a metallic silver optical disc partly tucked into a blue archive sleeve. No text, external artwork, embedded fonts or raster source assets are used. Each motif is a separate editable SVG and Icon Composer group.
 
 ## Source and generated assets
 
-- `assets/DiscPorter.icon`: editable Icon Composer package; `icon.json` plus three SVG assets.
+- `assets/DiscPorter.icon`: editable Icon Composer package; `icon.json` plus four SVG assets.
 - `assets/previews`: six committed reference previews; `assets/build/previews` regenerates six verified 1024 px macOS appearances: Default (Light), Dark, TintedLight, TintedDark, ClearLight and ClearDark.
 - `assets/build/catalog/Assets.car`: native compiled asset catalog.
 - `assets/build/catalog/DiscPorter.icns`: native compiler-generated compatibility icon.
@@ -51,7 +51,7 @@ Verified with Xcode 27.0 build 27A266a and Icon Composer 27.0 build 129:
 
 - JSON schema validation and referenced-asset checks passed.
 - Real `ictool` macOS exports succeeded for all six appearances; every exported image was visually inspected.
-- Default 16, 32 and 128 px outputs were visually inspected. The optical disc and tray remain recognizable; the smallest arrow is simplified by raster sampling.
+- The redesigned Default icon was visually inspected at 64 px, and Light/Dark at 256 px. The disc and sleeve remain recognizable.
 - `iconutil` generated the complete fallback `.icns` successfully.
 - `actool` generated `Assets.car`, native compatibility `.icns` and the two bundle icon keys successfully.
 - `assetutil --info` parsed the resulting asset catalog as a macOS catalog compiled by Xcode 27.
@@ -59,3 +59,9 @@ Verified with Xcode 27.0 build 27A266a and Icon Composer 27.0 build 129:
 These checks validate the source and compiled resources. Actual Finder/Dock appearance selection requires the integrated installed app bundle and is owned by the final app validation step. Appearance selection on older macOS versions is limited by that OS's available icon presentation features.
 
 Disc Porter 0.2 preserves this same editable icon and all six appearances. The 0.2 self-contained packaging step copies the native catalog and compiler-generated `.icns`, with no runtime code overriding the bundle icon. Re-rendering and schema validation passed on Xcode 27; final Finder/Dock selection remains part of integrated app QA.
+
+## October 2026 redesign
+
+At Kian’s request, the previous tray-and-arrow artwork was replaced with a disc-and-sleeve identity. Four original editable SVG layers form the sleeve back, metallic disc, sleeve front and fine stitching. The Light background is pale pearl; Dark is graphite. Tinted and Clear specializations are compiled by Apple’s compositor. Window theme preferences do not replace the Dock icon.
+
+Schema validation, six native renders, native catalog compilation and visual inspection passed. The signed local app was updated to version 0.2.0 build 3, changing only the icon resources and bundle metadata. Installed resource hashes match the final compiled catalog and compatibility icon. Actual system appearance switching still requires an unlocked desktop QA session; the rendered appearance previews are verified. User acceptance of the new artwork remains pending.

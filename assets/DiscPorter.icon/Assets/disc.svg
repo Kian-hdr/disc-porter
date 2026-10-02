@@ -1,3 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<path fill="#fff" fill-rule="evenodd" d="M512 172a242 242 0 1 1 0 484 242 242 0 0 1 0-484Zm0 178a64 64 0 1 0 0 128 64 64 0 0 0 0-128Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+<linearGradient id="metal" x1="0.17" y1="0" x2="0.8" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#fbfdff"/><stop offset=".30" stop-color="#dce8f2"/><stop offset=".45" stop-color="#b0c3d7"/><stop offset=".59" stop-color="#f4f7fb"/><stop offset=".83" stop-color="#c1cedf"/><stop offset="1" stop-color="#91a6c1"/></linearGradient>
+<linearGradient id="prism" x1="0" y1=".4" x2="1" y2=".65"><stop offset="0" stop-color="#87b2ff" stop-opacity="0"/><stop offset=".2" stop-color="#acc6ff" stop-opacity=".60"/><stop offset=".42" stop-color="#d3b5ec" stop-opacity=".58"/><stop offset=".58" stop-color="#f0c6bf" stop-opacity=".55"/><stop offset=".72" stop-color="#ece4b8" stop-opacity=".4"/><stop offset="1" stop-color="#c3f1ed" stop-opacity="0"/></linearGradient>
+</defs>
+<path fill="url(#metal)" fill-rule="evenodd" d="M616 116a274 274 0 1 1 0 548 274 274 0 0 1 0-548Zm0 221a53 53 0 1 0 0 106 53 53 0 0 0 0-106Z"/>
+<path fill="url(#prism)" d="M810 196A274 274 0 0 1 840 548L682 420A75 75 0 0 0 670 338Z"/>
+<path fill="#c9e8ff" opacity=".28" d="M437 182A274 274 0 0 0 346 456L553 409A66 66 0 0 1 571 342Z"/>
+<circle cx="616" cy="390" r="273" fill="none" stroke="#637e9e" stroke-opacity=".28" stroke-width="3"/><circle cx="616" cy="390" r="270" fill="none" stroke="#ffffff" stroke-opacity=".78" stroke-width="4"/>
+<circle cx="616" cy="390" r="249" fill="none" stroke="#637e9e" stroke-opacity=".10" stroke-width="2"/>
+<circle cx="616" cy="390" r="78" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="10"/>
+<circle cx="616" cy="390" r="59" fill="none" stroke="#7e92b2" stroke-opacity=".36" stroke-width="4"/>
 </svg>
