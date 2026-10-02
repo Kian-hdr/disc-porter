@@ -51,7 +51,7 @@ import json, plistlib,sys
 rows=json.load(open(sys.argv[2]))['files']
 minimum=max(tuple(map(int,x['minimum_macos'].split('.'))) for x in rows if x['minimum_macos']!='unknown')
 with open(sys.argv[1],'wb') as f:
- plistlib.dump({'CFBundleExecutable':'DiscPorter','CFBundleIdentifier':'dev.discporter.app','CFBundleName':'Disc Porter','CFBundleDisplayName':'Disc Porter','CFBundlePackageType':'APPL','CFBundleShortVersionString':'0.2.0','CFBundleVersion':'4','LSMinimumSystemVersion':'.'.join(map(str,minimum)),'NSPrincipalClass':'NSApplication','NSHighResolutionCapable':True,'CFBundleIconName':'DiscPorter','CFBundleIconFile':'DiscPorter'},f)
+ plistlib.dump({'CFBundleExecutable':'DiscPorter','CFBundleIdentifier':'dev.discporter.app','CFBundleName':'Disc Porter','CFBundleDisplayName':'Disc Porter','CFBundlePackageType':'APPL','CFBundleShortVersionString':'0.2.0','CFBundleVersion':'5','LSMinimumSystemVersion':'.'.join(map(str,minimum)),'NSPrincipalClass':'NSApplication','NSHighResolutionCapable':True,'CFBundleIconName':'DiscPorter','CFBundleIconFile':'DiscPorter'},f)
 PY
 xattr -cr "$APP"
 # Dependencies are individually signed by their build steps; sign the outer Swift app last.

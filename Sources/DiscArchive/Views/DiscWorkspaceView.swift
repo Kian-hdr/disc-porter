@@ -5,7 +5,7 @@ struct DiscWorkspaceView: View {
     @Binding var localSource: String?
     let didStart: (String) -> Void
     var body: some View {
-        ScrollView {
+        VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 18) {
                 HStack {
                     Text("Sources").font(.title2.weight(.semibold)); Spacer()
@@ -15,13 +15,19 @@ struct DiscWorkspaceView: View {
                     HStack { Label("Choose an archive folder in Settings before starting.", systemImage: "folder.badge.plus"); Spacer(); Button("Open Settings") { store.destination = .settings } }
                         .padding().background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
                 }
-                if store.discs.isEmpty && localSource == nil {
-                    ContentUnavailableView(store.scanning ? "Reading discs" : "Ready for a source", systemImage: "opticaldisc", description: Text("Insert a disc and Scan, or choose a local video. Unknown discs require confirmed title mappings."))
-                }
-                ForEach(store.discs, id: \.sourcePath) { disc in DiscComposerView(store: store, disc: disc, localSource: nil, didStart: didStart).id(disc.id + disc.sourcePath) }
-                if let localSource { DiscComposerView(store: store, disc: nil, localSource: localSource, didStart: didStart).id(localSource) }
             }.padding(20)
-        }
+            if store.discs.isEmpty && localSource == nil {
+                ContentUnavailableView(store.scanning ? "Reading discs" : "Ready for a source", systemImage: "opticaldisc", description: Text("Insert a disc and Scan, or choose a local video. Unknown discs require confirmed title mappings."))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        ForEach(store.discs, id: \.sourcePath) { disc in DiscComposerView(store: store, disc: disc, localSource: nil, didStart: didStart).id(disc.id + disc.sourcePath) }
+                        if let localSource { DiscComposerView(store: store, disc: nil, localSource: localSource, didStart: didStart).id(localSource) }
+                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 20).padding(.bottom, 20)
+                }
+            }
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

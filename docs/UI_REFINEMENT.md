@@ -22,3 +22,7 @@ The shared status strip is compact and pinned to the bottom. Settings and Librar
 - The final pinned saved-disc footer compiles; its final native visual walkthrough remains pending.
 
 Physical disc, playback, storage interruption and release validation retain their existing gates in VALIDATION_0_2.md. This change is private local UI work, not a public release.
+
+## Source empty-state alignment correction
+
+Build 5 moves the Sources header and folder banner outside the scrolling source list. With no source selected, the native empty-state symbol and description now expand and center within the remaining full-width content pane, instead of taking an intrinsic-width position in a leading-aligned stack. Populated sources keep their scrolling composer layout. The build, 655-file bundle verification, strict signature verification and local installation passed. Two native inspection attempts timed out, so the installed pixel-level readback remains pending.
