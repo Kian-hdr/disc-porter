@@ -2,7 +2,9 @@
 
 A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
 
-**Version 0.2 is a private development build.** Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Public release remains gated on physical validation and distribution review.
+Created by **Kian Konrad Tajbakhsh**.
+
+Version 0.2.0 is an early release. Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Real-disc, disconnect/reconnect and target-player pilots remain pending; see the validation evidence before relying on unattended processing.
 
 ## One window, five destinations
 
@@ -52,4 +54,4 @@ Native notifications request OS authorization only from an explicit in-app butto
 
 ## Attribution and publication
 
-Workflow informed by [DVD Digitize & Archive](https://github.com/Kian-hdr/dvd-digitize-archive). The original app source license remains MIT; bundled third-party components retain their own licenses and source duties. MCP uses the [official Python SDK](https://github.com/modelcontextprotocol/python-sdk). No private media or collection records are included. Keep this repository private until the separately authorized release review.
+Workflow informed by [DVD Digitize & Archive](https://github.com/Kian-hdr/dvd-digitize-archive). The original app source license remains MIT; bundled third-party components retain their own licenses and source duties. MCP uses the [official Python SDK](https://github.com/modelcontextprotocol/python-sdk). No private media or collection records are included. Source publication is authorized. Binary distribution and Homebrew availability are recorded separately in the release documentation.
