@@ -14,7 +14,7 @@ Created by **Kian Konrad Tajbakhsh**. Original app source is MIT licensed, with 
 
 ## Pending public download and Homebrew
 
-The notarization profile recorded for this Mac, `Exlumina-Notary`, was not available. Keychain metadata and standard local Apple API-key locations did not reveal another usable credential. Developer ID signing does not supply authentication to Apple's notarization service. The public binary and personal-tap cask remain pending, rather than providing an unverified installer.
+The notarization profile recorded for this Mac was not available. Keychain metadata and standard local Apple API-key locations did not reveal another usable credential. Developer ID signing does not supply authentication to Apple's notarization service. The public binary and personal-tap cask remain pending, rather than providing an unverified installer.
 
 An account owner must complete this one-time credential step locally, without sending passwords or private keys through chat:
 
