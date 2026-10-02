@@ -6,6 +6,10 @@ Created by **Kian Konrad Tajbakhsh**.
 
 Version 0.2.0 is an early release. Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Real-disc, disconnect/reconnect and target-player pilots remain pending; see the validation evidence before relying on unattended processing.
 
+## Installation status
+
+The source repository is public. The 0.2.0 build 5 download is prepared as a draft; Apple notarization and Homebrew cask publication are pending credential setup. See [release status and the one-time Apple setup](docs/RELEASE_0_2.md). A Homebrew installation command will be added after its actual install path is verified.
+
 ## One window, five destinations
 
 - **Discs:** discover media, confirm identification, select titles/streams, preview the effective recipe and destination.
