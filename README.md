@@ -2,6 +2,8 @@
 
 <p align="center">Archive DVDs and Blu-rays locally on your Mac.</p>
 
+<p align="center"><img src="assets/previews/Dark.png" width="72" alt="Disc Porter macOS app icon"></p>
+
 <h2 align="center">Download</h2>
 
 <p align="center">
