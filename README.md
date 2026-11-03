@@ -6,9 +6,19 @@ Created by **Kian Konrad Tajbakhsh**.
 
 Version 0.2.0 is an early release. Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Real-disc, disconnect/reconnect and target-player pilots remain pending; see the validation evidence before relying on unattended processing.
 
-## Installation status
+## Install preview
 
-The source repository is public. The 0.2.0 build 5 download is prepared as a draft; Apple notarization and Homebrew cask publication are pending credential setup. See [release status and the one-time Apple setup](docs/RELEASE_0_2.md). A Homebrew installation command will be added after its actual install path is verified.
+[![Download preview DMG · Apple silicon](https://img.shields.io/badge/Download%20preview%20DMG%20%C2%B7%20Apple%20silicon-24292F?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg) [![Install with Homebrew](https://img.shields.io/badge/Install%20with%20Homebrew-8A4B20?style=for-the-badge&logo=homebrew&logoColor=white)](#install-preview)
+
+[Download preview DMG](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg) · [Preview release notes](https://github.com/Kian-hdr/disc-porter/releases/tag/v0.2.0)
+
+Open the signed and notarized DMG and drag the app to Applications, or install the same DMG using Homebrew:
+
+```sh
+brew install --cask kian-hdr/tap/disc-porter
+```
+
+This preview is for Apple silicon Macs running macOS 14 or later. Real-disc, drive interruption and target-player tests remain open. See [release status](docs/RELEASE_0_2.md) for the source archive and validation scope.
 
 ## One window, five destinations
 
