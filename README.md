@@ -2,21 +2,29 @@
 
 A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
 
+## Download
+
+<p>
+<a href="https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg"><img src="docs/assets/downloads/download_1.svg" width="240" height="48" alt="Download for macOS"></a>
+</p>
+
+[DMG · Preview · Apple silicon · v0.2.0 · macOS 14 or later](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg)
+
+[Install with Homebrew](#installation) · [Preview release notes](https://github.com/Kian-hdr/disc-porter/releases/tag/v0.2.0)
+
 Created by **Kian Konrad Tajbakhsh**.
 
 Version 0.2.0 is an early release. Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Real-disc, disconnect/reconnect and target-player pilots remain pending; see the validation evidence before relying on unattended processing.
 
-## Install preview
-
-[![Download preview DMG · Apple silicon](https://img.shields.io/badge/Download%20preview%20DMG%20%C2%B7%20Apple%20silicon-24292F?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg) [![Install with Homebrew](https://img.shields.io/badge/Install%20with%20Homebrew-8A4B20?style=for-the-badge&logo=homebrew&logoColor=white)](#install-preview)
-
-[Download preview DMG](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg) · [Preview release notes](https://github.com/Kian-hdr/disc-porter/releases/tag/v0.2.0)
+## Installation
 
 Open the signed and notarized DMG and drag the app to Applications, or install the same DMG using Homebrew:
 
 ```sh
 brew install --cask kian-hdr/tap/disc-porter
 ```
+
+If Homebrew asks you to trust the cask, run `brew tap kian-hdr/tap` and `brew trust --cask kian-hdr/tap/disc-porter`, then retry.
 
 This preview is for Apple silicon Macs running macOS 14 or later. Real-disc, drive interruption and target-player tests remain open. See [release status](docs/RELEASE_0_2.md) for the source archive and validation scope.
 
