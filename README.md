@@ -1,6 +1,6 @@
 # Disc Porter
 
-A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
+Archive DVDs and Blu-rays locally on your Mac.
 
 ## Download
 
@@ -11,6 +11,8 @@ A native macOS app for local DVD/Blu-ray archiving with configurable recipes, du
 [DMG · Preview · Apple silicon · v0.2.0 · macOS 14 or later](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg)
 
 [Install with Homebrew](#installation) · [Preview release notes](https://github.com/Kian-hdr/disc-porter/releases/tag/v0.2.0)
+
+A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
 
 Created by **Kian Konrad Tajbakhsh**.
 
