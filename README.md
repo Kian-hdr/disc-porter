@@ -25,10 +25,10 @@ Version 0.2.0 is an early release. Code, tests, setup and validation live here. 
 Open the signed and notarized DMG and drag the app to Applications, or install the same DMG using Homebrew:
 
 ```sh
-brew install --cask kian-hdr/tap/disc-porter
+brew install --cask kian-hdr/apps/disc-porter
 ```
 
-If Homebrew asks you to trust the cask, run `brew tap kian-hdr/tap` and `brew trust --cask kian-hdr/tap/disc-porter`, then retry.
+If Homebrew asks you to trust the cask, run `brew tap kian-hdr/apps` and `brew trust --cask kian-hdr/apps/disc-porter`, then retry.
 
 This preview is for Apple silicon Macs running macOS 14 or later. Real-disc, drive interruption and target-player tests remain open. See [release status](docs/RELEASE_0_2.md) for the source archive and validation scope.
 

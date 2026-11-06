@@ -7,7 +7,7 @@ Created by **Kian Konrad Tajbakhsh**. Original application source is MIT license
 Disc Porter 0.2.0 build 5 requires **Apple Silicon and macOS 14 or later**. Install [MakeMKV](https://www.makemkv.com/download/) separately to read discs. Before replacing an existing copy, pause or complete active archiving and quit Disc Porter normally.
 
 - [Download the signed DMG](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg), open it, and drag Disc Porter to Applications.
-- With Homebrew, use `brew install --cask kian-hdr/tap/disc-porter`. If Homebrew requires tap trust, run `brew tap kian-hdr/tap` and `brew trust --cask kian-hdr/tap/disc-porter` before retrying the install.
+- With Homebrew, use `brew install --cask kian-hdr/apps/disc-porter`. If Homebrew requires tap trust, run `brew tap kian-hdr/apps` and `brew trust --cask kian-hdr/apps/disc-porter` before retrying the install.
 
 The [preview release](https://github.com/Kian-hdr/disc-porter/releases/tag/v0.2.0) includes SHA-256 files for the DMG and the [matching third-party source packet](https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_Third_Party_Sources.zip). Keep that packet available alongside the binary. See [third-party release evidence](THIRD_PARTY_RELEASE.md) for component licenses and source correspondence.
 
