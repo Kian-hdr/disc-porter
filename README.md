@@ -16,7 +16,7 @@
 
 A native macOS app for local DVD/Blu-ray archiving with configurable recipes, durable title checkpoints and complete local MCP control. Processing uses no AI model or model tokens. An AI client using MCP separately consumes its client's tokens.
 
-Created by **Kian Konrad Tajbakhsh**.
+Created by **Kian Konrad**.
 
 Version 0.2.0 is an early release. Code, tests, setup and validation live here. Media, credentials and private runtime logs stay outside Git. Real-disc, disconnect/reconnect and target-player pilots remain pending; see the validation evidence before relying on unattended processing.
 
