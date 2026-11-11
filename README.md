@@ -1,10 +1,13 @@
-<h1 align="center">Disc Porter</h1>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/README_Wordmark_Dark.svg">
+    <img src="docs/assets/README_Wordmark_Light.svg" width="212" height="42" alt="Disc Porter">
+  </picture>
+</p>
 
 <p align="center">Archive DVDs and Blu-rays locally on your Mac.</p>
 
 <p align="center"><img src="assets/previews/Dark.png" width="96" alt="Disc Porter macOS app icon"></p>
-
-<h2 align="center">Download</h2>
 
 <p align="center">
 <a href="https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg"><img src="docs/assets/downloads/download_1.svg" width="240" height="48" alt="Download for macOS"></a>
