@@ -7,7 +7,13 @@
 
 <p align="center">Archive DVDs and Blu-rays locally on your Mac.</p>
 
-<p align="center"><img src="assets/previews/Dark.png" width="96" alt="Disc Porter macOS app icon"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/previews/Dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/previews/Default.png">
+    <img src="assets/previews/Default.png" width="96" alt="Disc Porter macOS app icon">
+  </picture>
+</p>
 
 <p align="center">
 <a href="https://github.com/Kian-hdr/disc-porter/releases/download/v0.2.0/Disc_Porter_0.2.0_arm64.dmg"><img src="docs/assets/downloads/download_1.svg" width="240" height="48" alt="Download for macOS"></a>
